@@ -1,0 +1,53 @@
+# Use vale to lint asciidoc
+name: "Check Docs style"
+
+on:
+  # push:
+  #   branches:
+  #   - dev
+  workflow_dispatch:
+    inputs:
+      files:
+        description: 'The files to lint'
+        default: '.'
+        type: string
+      vale-flags:
+        description: 'The vale ini file to use'
+        default: '--config=.vale.ini'
+        type: string
+      use-default-rules:
+        description: 'Use default rules'
+        default: true
+        type: boolean
+      vale-fail-on-error:
+        description: 'Report vale errors as a failure'
+        default: false
+        type: boolean
+      reporter:
+        description: 'Where action messages are reported'
+        type: string
+        default: 'github-check'
+      separator:
+        description: 'Delimiter for input files or folders'
+        type: string
+        default: ''
+      debug:
+        description: 'Show debug in log'
+        default: false
+        type: boolean
+  # schedule:
+    # - cron:  '00 16 * * *'
+
+jobs:
+
+  docs-lint:
+    name: Lint docs
+    uses: neo4j/docs-tools/.github/workflows/reusable-docs-lint.yml@v1.1.2
+    with:
+      files: ${{ inputs.files }}
+      vale-flags: ${{ inputs.vale-flags }}
+      use-default-rules: ${{ inputs.use-default-rules }}
+      vale-fail-on-error: ${{ inputs.vale-fail-on-error }}
+      reporter: ${{ inputs.reporter }}
+      separator: ${{ inputs.separator }}
+      debug:  ${{ inputs.debug }}
