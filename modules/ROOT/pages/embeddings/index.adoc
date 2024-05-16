@@ -1,0 +1,21 @@
+= What are embeddings?
+
+Embeddings are numerical representations of content, such as texts or images.
+Embeddings are an attempt to encode language into a form that machines can work with: lists of numbers.
+
+This tutorial aims at being able to query movies based on a description, so you will create embeddings for movies' titles and plots.
+Each movie node will get an extra property, that looks like absolute gibberish at the human eye, but that makes it possible for vector indexes to parse content.
+
+For example, the picture below shows the text for the movie `Despicable Me` and its corresponding embedding.
+
+image::despicable-embedding.png[width=100%]
+
+Embeddings are always generated _out_ of Neo4j, but _stored_ in the Neo4j database.
+This tutorial shows how to generate embeddings both with open source libraries and with external AI providers (supported providers are OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
+
+[TIP]
+**You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate embeddings all throughout this tutorial.
+
+_How_ a piece of text is encoded into an embedding is a whole field of research of its own and is out of the scope of this tutorial, which only shows how to _use_ them.
+
+

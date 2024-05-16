@@ -1,5 +1,5 @@
-name: docs-template
-title: Neo4j Documentation template
+name: docs-ai
+title: Neo4j AI
 version: '1.0'
 # display_version: '1.0-preview'
 start_page: ROOT:index.adoc

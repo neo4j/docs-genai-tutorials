@@ -1,12 +1,12 @@
 # Use this playbook file when you need to build and publish multuple versions of your content together
 site:
-  title: Neo4j Docs Template
+  title: Neo4j AI
   url: https://neo4j.com/docs
-  start_page: docs-template:ROOT:index.adoc
+  start_page: docs-ai:ROOT:index.adoc
 
 content:
   sources:
-  - url: https://github.com/neo4j/docs-template.git
+  - url: ./
     branches: ['main', 'dev']
     exclude:
     - '!**/_includes/*'
@@ -45,7 +45,7 @@ asciidoc:
     page-canonical-root: /docs
     page-terms-to-mark: Cypher
     page-pagination: true
-    page-no-canonical: true 
+    page-no-canonical: true
     page-origin-private: true
     page-hide-toc: false
     page-mixpanel: 4bfb2414ab973c741b6f067bf06d5575
@@ -58,3 +58,4 @@ asciidoc:
     cross-mark: icon:times[]
     neo4j-base-uri: ''
     neo4j-docs-base-uri: /docs
+    partials: ROOT:partial$@

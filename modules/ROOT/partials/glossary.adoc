@@ -1,0 +1,3 @@
+[glossary]
+[[Cypher]]Cypher:: link:https://neo4j.com/docs/getting-started/cypher-intro/[Cypher] is Neo4j's graph query language that lets you retrieve data from the database.
+It is like SQL, but for graphs.

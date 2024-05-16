@@ -1,0 +1,65 @@
+= Import dataset
+
+
+This tutorial is based on the link:https://github.com/neo4j-graph-examples/recommendations/tree/main[recommendations dataset], so the first step is to import its _dump file_ into your Neo4j instance.
+The way in which a dump file is imported into Neo4j differs whether you are running a self-managed DBMS instance or a cloud Aura instance.
+
+
+== Neo4j Aura
+
+To import the recommendations dataset on an Aura instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and upload it into the `Import Database` tab of your instance.
+For more information, see link:https://neo4j.com/docs/aura/auradb/importing/import-database/[Aura -> Import database].
+
+After the import completes, go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/external-providers.adoc[cloud AI providers].
+
+
+== Neo4j DBMS
+
+To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and place it in the directory where Neo4j is running from (you may use `docker cp` to copy it to a Neo4j Docker container).
+
+.List of Neo4j directory files with `recommendations-50.dump`
+[source, shell]
+----
+neo4j@2f446f86ce6a:~$ ls
+LICENSE.txt   bin	    labs      packaging_info
+LICENSES.txt  certificates  lib       plugins
+NOTICE.txt    conf	    licenses  products
+README.txt    data	    logs      recommendations-50.dump
+UPGRADE.txt   import	    metrics   run
+----
+
+[TIP]
+====
+If working with a Neo4j Docker container, ensure you connect to it under the user `neo4j` before issuing import commands, or you will get permission issues after the import.
+
+[source, shell]
+----
+docker container exec -u neo4j -it <containerName> /bin/bash
+----
+====
+
+To import the dataset, use the link:https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/[`neo4j-admin database load`] command and create a new database with the same name as the dump file.
+
+[source, shell]
+----
+bin/neo4j-admin database load recommendations-50 --from-path=./
+bin/cypher-shell -u neo4j -p <databasePassword> -d system 'CREATE DATABASE `recommendations-50` WAIT'
+----
+
+To verify that the import was successful, check that the count for `Movie` nodes is 9125.
+
+[source, shell]
+----
+bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-50 'MATCH (:Movie) RETURN count(*)'
+----
+
+[source, shell, role=nocopy]
+----
++----------+
+| count(*) |
++----------+
+| 9125     |
++----------+
+----
+
+You can now go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/external-providers.adoc[cloud AI providers].

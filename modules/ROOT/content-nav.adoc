@@ -1,4 +1,17 @@
 * xref:index.adoc[]
-* xref:getting-started.adoc[]
-* xref:content-types.adoc[]
-* xref:trademarks.adoc[]
+
+* **Setup**
+* xref:setup/import-dataset.adoc[]
+
+* *Embeddings*
+* xref:embeddings/sentence-transformer.adoc[]
+* xref:embeddings/external-providers.adoc[]
+* xref:embeddings/compute-similarity.adoc[]
+
+* *Query*
+* xref:setup/create-index.adoc[]
+* xref:query/search-prompt.adoc[]
+* xref:query/similar-nodes.adoc[]
+
+* *Further resources*
+* link:https://graphacademy.neo4j.com/categories/llms/[GraphAcademy -- GenAI courses]

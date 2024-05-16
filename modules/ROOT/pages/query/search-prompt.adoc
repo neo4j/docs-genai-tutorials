@@ -1,0 +1,161 @@
+= Find movies given a search prompt
+
+Once movies nodes have an xref:embeddings/index.adoc[embedding encoding their title and plot], and a xref:setup/create-index.adoc[vector index] on those embeddings is present in the database, you may retrieve movies matching a loose description (a _search prompt_), a bit like you do on a search engine to find relevant web pages based on a few keywords.
+
+The examples in this page show how to retrieve movies that relate to the search prompt `a criminal is changed through love`.
+You may imagine it akin to going to the movie teather and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
+The main difference is that at the theater the whole conversation takes place in natural language, whereas to search in the database the prompt is first turned into an embedding.
+The vector index can then use the prompt embedding to retrieve the nodes whose embedding is most similar to the search prompt.
+
+[TIP]
+**Always use the same model to generate embeddings**: pick one and use it to generate embeddings for both the dataset and search prompts.
+Attempt to mix models with different vector sizes will result in an error; even models with the same vector size are unlikely to interact well with one another though, as they most likely differ in the way they were trained.
+
+
+== Similarity for embeddings generated with offline libraries
+
+This example uses `SentenceTransformers` to retrieve nodes relating to the description `a criminal is changed through love`.
+
+[source, python, role=nocollapse]
+----
+from sentence_transformers import SentenceTransformer
+import neo4j
+
+
+URI = '<URI for Neo4j database>'
+AUTH = ('<Username>', '<Password>')
+DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+
+driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
+driver.verify_connectivity()
+
+model = SentenceTransformer('all-MiniLM-L6-v2')  # <1>
+
+query_prompt = 'a criminal is changed through love'  # <2>
+query_embedding = model.encode(search_prompt)
+
+related_movies, _, _ = driver.execute_query('''  // <3>
+    CALL db.index.vector.queryNodes('moviePlots', 5, $queryEmbedding)
+    YIELD node, score
+    RETURN node.title AS title, node.plot AS plot, score
+    ''', queryEmbedding=query_embedding,
+    database_=DB_NAME)
+print(f'Movies whose plot and title relate to `{query_prompt}`:')
+for record in related_movies:
+    print(record)
+----
+
+<1> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
+xref:embeddings/sentence-transformer.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
+<2> The _query prompt_ contains a loose description of movies to retrieve.
+It is then encoded into an embedding.
+<3> To link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[query the vector index], use the Cypher procedure `db.index.vector.queryNodes()`.
+The database returns the `5` most similar nodes to `query_embedding` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
+
+[source, output]
+----
+Movies whose plot and title relate to `a criminal is changed through love`:
+<Record title='I Love You Phillip Morris' plot="A cop turns con man once he comes out of the closet. Once imprisoned, he meets the second love of his life, whom he'll stop at nothing to be with." score=0.792834997177124>
+<Record title='Laura' plot='A police detective falls in love with the woman whose murder he is investigating.' score=0.7741715908050537>
+<Record title='Despicable Me' plot='When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.' score=0.772994875907898>
+<Record title='Laws of Attraction' plot='Amidst a sea of litigation, two New York City divorce lawyers find love.' score=0.7727792263031006>
+<Record title='Love the Hard Way' plot='The story of a petty thief who meets an innocent young woman and brings her into his world of crime while she teaches him the lessons of enjoying life and being loved.' score=0.7681001424789429>
+----
+
+
+== Similarity for embeddings generated with OpenAI and other cloud services
+
+This example uses OpenAI to retrieve nodes relating to the description `a criminal is changed through love`.
+
+[source, python, role=nocollapse]
+----
+import neo4j
+
+
+URI = '<URI for Neo4j database>'
+AUTH = ('<Username>', '<Password>')
+DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
+driver.verify_connectivity()
+
+openAI_token = '<OpenAI API token>'  # <1>
+
+search_prompt = 'a criminal is changed through love'  # <2>
+
+search_query = '''
+WITH genai.vector.encode($searchPrompt, 'OpenAI', { token: $token }) AS queryVector  // <3>
+CALL db.index.vector.queryNodes('moviePlots', 5, queryVector)  // <4>
+YIELD node, score
+RETURN node.title as title, node.plot, score
+'''
+records, summary, _ = driver.execute_query(
+    search_query, searchPrompt=search_prompt, token=openAI_token,
+    database_=DB_NAME)
+print(f'Movies whose plot and title relate to `{search_prompt}`:')
+for record in records:
+    print(record)
+----
+
+<1> Your OpenAI API token, such as `sk-proj-XXXX`.
+<2> The _query prompt_ contains a loose description of movies to retrieve.
+<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()]`.
+<4> To link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[query the vector index], use the Cypher procedure `db.index.vector.queryNodes()`.
+The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
+
+[source, output]
+----
+Movies whose plot and title relate to `a criminal is changed through love`:
+<Record title='I Love You Phillip Morris' node.plot="A cop turns con man once he comes out of the closet. Once imprisoned, he meets the second love of his life, whom he'll stop at nothing to be with." score=0.9272396564483643>
+<Record title='Love the Hard Way' node.plot='The story of a petty thief who meets an innocent young woman and brings her into his world of crime while she teaches him the lessons of enjoying life and being loved.' score=0.9221653938293457>
+<Record title='Laura' node.plot='A police detective falls in love with the woman whose murder he is investigating.' score=0.9215129017829895>
+<Record title='Despicable Me' node.plot='When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.' score=0.9206478595733643>
+<Record title='Cook the Thief His Wife & Her Lover, The' node.plot='The wife of an abusive criminal finds solace in the arms of a kind regular guest in her husbands restaurant.' score=0.9205931425094604>
+----
+
+
+[[matches-quality]]
+== Quality of matches
+
+**The quality of matches depends entirely on the embedding model and on the dataset, not on the Neo4j vector index.**
+Embeddings are always generated _outside_ of Neo4j; the database only _stores_ them as properties.
+
+Consider the nodes retrieved with the search prompt `a criminal is changed through love` using SentenceTransformers:
+
+[source, output]
+----
+Movies whose plot and title relate to `a criminal is changed through love`:
+<Record title='I Love You Phillip Morris' plot="A cop turns con man once he comes out of the closet. Once imprisoned, he meets the second love of his life, whom he'll stop at nothing to be with." score=0.792834997177124>
+<Record title='Laura' plot='A police detective falls in love with the woman whose murder he is investigating.' score=0.7741715908050537>
+<Record title='Despicable Me' plot='When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.' score=0.772994875907898>
+<Record title='Laws of Attraction' plot='Amidst a sea of litigation, two New York City divorce lawyers find love.' score=0.7727792263031006>
+<Record title='Love the Hard Way' plot='The story of a petty thief who meets an innocent young woman and brings her into his world of crime while she teaches him the lessons of enjoying life and being loved.' score=0.7681001424789429>
+----
+
+This example shows that embeddings worked according to expectations: `Despicable Me` comes up third with a relevance score of 77%.
+However, it also shows the **limitations of embedding models**, by retrieving movies that don't really relate to the prompt:
+
+- `Laura` has no "criminal changed through love", but it has a `police detective` (who often works with _criminals_) who falls in `love` in the context of a `murder` (again related to _criminals_).
+- `Laws of Attraction` has no `criminals` at all, but it has: `attraction`, which relates to `love`; `litigation`, which usually happens in courts, which are related to `criminals`; `lawyers`, who are often associated with `criminals`; and `love`, although among _lawyers_.
+- `Love the Hard Way` has it almost the other way around: an innocent student falls in `love` with a _downgraded version_ of a `criminal` (a `petty thief`), and enters a downward spiral.
+
+Even if these movies hardly relate to the search prompt, _the database is right_: they are the most relevant ones, _according to the embeddings_.
+Why the embeddings don't encode meaning in they way one may expect is a question that is not related to vector indexes, but rather the external AI models.
+
+To further clarify: how come `Despicable Me 2` does not show up in the top five closest movies to `Despicable Me`?
+Embeddings are generated on titles and plots, so let's look at how the plots for the two movies relate.
+
+.`Despicable Me 2` plot
+[caption=""]
+|===
+|When Gru, the world's most super-bad turned super-dad has been recruited by a team
+of officials to stop lethal muscle and a host of Gru's own, He has to fight back
+with new gadgetry, cars, and more minion madness.
+|===
+
+These read like entirely different movies: what was a `criminal mastermind` is now `Gru, the world's most super-bad`; there's no more `trio of orphan girls` in any form; there were no `minions` in the plot of the first movie.
+
+Today everybody associates `Despicable Me` with `minions`, but that is not how it was described and marketed when the movie first came out.
+`Minions` stack really well in the public culture though, so they became the main center of marketing _afterward_.
+The embedding model simply doesn't have all this context -- one that comes from having lived in the world for a decade, day in, day out.
+
+The main point here is that **if your search prompts return poor results**, you should investigate the embedding model and the dataset it is applied to, rather than tweaking the Neo4j side of things.

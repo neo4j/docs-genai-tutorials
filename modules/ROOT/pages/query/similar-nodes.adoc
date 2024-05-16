@@ -1,0 +1,68 @@
+= Find movies similar to a given one
+
+To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[the Cypher procedure `db.index.vector.queryNodes]`.
+
+[source, cypher, test-result-skip]
+----
+MATCH (m:Movie {title: 'Despicable Me'})
+CALL db.index.vector.queryNodes('moviePlots', 5, m.embedding)
+YIELD node, score
+RETURN node.title AS title, node.plot AS plot, score
+----
+
+.Result with embeddings from OpenAI
+[role="queryresult", cols="2,4,1", options="header"]
+|===
+| title | plot | score
+
+| "Despicable Me"
+| "When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better."
+| 1.0
+
+| "Despicable Me 2"
+| "When Gru, the world's most super-bad turned super-dad has been recruited by a team of officials to stop lethal muscle and a host of Gru's own, He has to fight back with new gadgetry, cars, and more minion madness."
+| 0.940204381942749
+
+| "Minions"
+| "Minions Stuart, Kevin and Bob are recruited by Scarlet Overkill, a super-villain who, alongside her inventor husband Herb, hatches a plot to take over the world."
+| 0.9329936504364014
+
+| "Dr. Horrible's Sing-Along Blog"
+| "An aspiring supervillain must balance his career and his pursuit of a beautiful do-gooder."
+| 0.930407702922821
+
+| "Aladdin"
+| "When a street urchin vies for the love of a beautiful princess, he uses a genie's magic power to make himself off as a prince in order to marry her."
+| 0.9291699528694153
+
+|===
+
+.Result with embeddings from SentenceTransformers
+[role="queryresult", cols="2,4,1", options="header"]
+|===
+| title | plot | score
+
+| "Despicable Me"
+| "When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better."
+| 1.0
+
+| "Love the Hard Way"
+| "The story of a petty thief who meets an innocent young woman and brings her into his world of crime while she teaches him the lessons of enjoying life and being loved."
+| 0.7806928157806396
+
+| "Limits of Control, The"
+| "The story of a mysterious loner, a stranger in the process of completing a criminal job."
+| 0.7746935486793518
+
+| "Half Baked"
+| "The story of three not so bright men who come up with a series of crazy schemes to get a friend out of jail."
+| 0.7708940505981445
+
+| "The Man from Nowhere"
+| "A quiet pawnshop keeper with a violent past takes on a drug-and-organ trafficking ring in hope of saving the child who is his only friend."
+| 0.7698113918304443
+
+|===
+
+When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], OpenAI and SentenceTransformers didn't differ much. On the other hand, in this example OpenAI embeddings perform much better than their open source counterparts: OpenAI seems to be able to relate the three _minion_ movies even if the plots alone don't look too similar.
+This has entirely to do with how the OpenAI model was trained (see xref:query/search-prompt.adoc#matches-quality[Quality of matches]).

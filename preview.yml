@@ -1,7 +1,7 @@
 site:
-  title: Neo4j Docs Template
+  title: Neo4j AI
   url: https://neo4j.com/docs
-  start_page: docs-template:ROOT:index.adoc
+  start_page: docs-ai:ROOT:index.adoc
 
 content:
   sources:
@@ -57,3 +57,4 @@ asciidoc:
     cross-mark: icon:times[]
     neo4j-base-uri: https://neo4j.com
     neo4j-docs-base-uri: https://neo4j.com/docs
+    partials: ROOT:partial$@

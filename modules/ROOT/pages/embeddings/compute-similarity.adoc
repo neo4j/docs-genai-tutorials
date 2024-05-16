@@ -1,0 +1,43 @@
+= Compute embeddings similarity
+
+Once embeddings are in the database, you can compute the similarity of two of them using for example the Cypher function link:https://neo4j.com/docs/cypher-manual/current/functions/vector/#functions-similarity-cosine[`vector.similarity.cosine()`].
+
+.Compare embeddings for two related movies
+====
+.Query
+[source, cypher, test-result-skip]
+----
+MATCH (a:Movie {title: "Despicable Me"})
+MATCH (b:Movie {title: "Despicable Me 2"})
+RETURN vector.similarity.cosine(a.embedding, b.embedding)
+----
+
+.Result with SentenceTransformer embeddings
+[role="queryresult",options="header,footer",cols="1*<m"]
+|===
+| vector.similarity.cosine(a.embedding, b.embedding)
+| 0.7020013332366943
+|===
+====
+
+.Compare embeddings for two unrelated movies
+====
+[source, cypher, test-result-skip]
+.Query
+----
+MATCH (a:Movie {title: "Despicable Me"})
+MATCH (b:Movie {title: "Fantasia"})
+RETURN vector.similarity.cosine(a.embedding, b.embedding)
+----
+
+.Result with SentenceTransformer embeddings
+[role="queryresult",options="header,footer",cols="1*<m"]
+|===
+| vector.similarity.cosine(a.embedding, b.embedding)
+| 0.5812770128250122
+|===
+====
+
+This method works fine for comparing two movies, but it doesn't work to find the most similar nodes to `Despicable Me`, for example: you would need to retrieve the whole dataset and manually compute the similarity of each node's embedding to Despicable Me's embedding with vector similarity functions.
+
+To be able to quickly retrieve nodes basing on their embeddings, go on to xref:setup/create-index.adoc[create a vector index] on the movie embeddings and xref:query/search-prompt.adoc[query the database] based on that.

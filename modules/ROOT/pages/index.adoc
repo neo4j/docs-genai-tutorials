@@ -1,17 +1,42 @@
-= Docs template
+= Introduction
 
-This is the main index page for your docs project.
+Humans do great with natural language and struggle with numbers; computers do great with numbers and struggle with natural language.
+How can we use computers for tasks that require understanding of natural language, then?
+Given a Neo4j database with movies, how can you query it to know what movies best match your interest, if that is expressed in words?
+For example, what movies are about `an exploration of italian mafias in america`?
+What movies relate to `a criminal is changed through love`?
+What movies are similar to one another?
 
-== Start page
+**Neo4j's vector indexes allow to retrieve nodes and relationships that are similar to other nodes and relationships, or that relate to a given text prompt.**
+Vector indexes don't work on texts expressed in natural language though: they need the texts to be turned into lists of numbers.
+These lists are called _embeddings_, and they attempt to encode the meaning of a text numerically.
+With a vector index, the database can quickly match graph entities basing on their embeddings.
 
-When you build your content locally, this page should be specified as the start page in _preview.yml_.
+For example, the picture below shows the title and plot for the movie `Despicable Me` and its corresponding embedding.
 
-[source, yaml, role=noheader]
-----
-start_page: docs-template:ROOT:index.adoc
-----
+[.rounded-corners]
+image::despicable-embedding.png[width=100%]
+
+This tutorial uses the link:https://github.com/neo4j-graph-examples/recommendations/tree/main[recommendations dataset], which contains movies and people who have directed or acted in those movies.
+It guides you through importing the dataset, creating embeddings on the movie nodes, creating a vector index, and querying the database for movies given a loose description or a similar movie.
+You learn how to generate embeddings both with free and open source libraries, and with external AI providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
+
+image::recommendations-model.svg[width=600]
+
+This guide has the following requirements:
+
+- A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or signup for a (free) link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
+- Some familiarity with <<Cypher>> -- If you need a hand, check out link:https://neo4j.com/docs/getting-started/cypher-intro/[Getting started -> Cypher].
+- `python` and some familiarity with it.
+- An API key to one of the external AI providers, if you intend to generate embeddings with them.
 
 [TIP]
-====
-This repo contains example content such as asciidoc pages, re-usable fragments, and examples, to show where different types of files should be stored in an Antora project.
-====
+**You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate embeddings all throughout this tutorial.
+
+
+ifndef::backend-pdf[]
+[discrete.glossary]
+== Glossary
+
+include::{partials}/glossary.adoc[]
+endif::[]
