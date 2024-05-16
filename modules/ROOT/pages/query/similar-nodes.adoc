@@ -64,5 +64,28 @@ RETURN node.title AS title, node.plot AS plot, score
 
 |===
 
-When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], OpenAI and SentenceTransformers didn't differ much. On the other hand, in this example OpenAI embeddings perform much better than their open source counterparts: OpenAI seems to be able to relate the three _minion_ movies even if the plots alone don't look too similar.
-This has entirely to do with how the OpenAI model was trained (see xref:query/search-prompt.adoc#matches-quality[Quality of matches]).
+When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], results from OpenAI and SentenceTransformers didn't differ much.
+On the other hand, in the example above they perform very differently.
+How come `Despicable Me 2` does not show up in the top five closest movies to `Despicable Me`, with SentenceTransformers embeddings?
+
+Embeddings are generated on titles and plots, so let's look at how the plots for the two movies relate.
+
+.`Despicable Me` plot
+[caption=""]
+|===
+|When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.
+|===
+
+.`Despicable Me 2` plot
+[caption=""]
+|===
+|When Gru, the world's most super-bad turned super-dad has been recruited by a team of officials to stop lethal muscle and a host of Gru's own, He has to fight back with new gadgetry, cars, and more minion madness.
+|===
+
+These read like entirely different movies: what was a `criminal mastermind` is now `Gru, the world's most super-bad`; there's no more `trio of orphan girls` in any form; there were no `minions` in the plot of the first movie.
+
+Although today everybody associates `Despicable Me` with `minions`, that is not how it was described and marketed when the movie first came out.
+`Minions` stack really well in the public culture, which made them the main center of marketing _afterward_.
+The embedding model simply doesn't have all this context -- one that comes from having lived in the world for a decade, day in, day out.
+OpenAI seems to be able to relate the three _minion_ movies even if the plots alone don't look too similar, and it has entirely to do with how the OpenAI model was trained.
+If anything, it's more surprising that OpenAI relates them correctly than SentenceTransformers failing at seeing a link in them.

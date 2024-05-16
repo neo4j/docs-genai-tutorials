@@ -119,7 +119,7 @@ Movies whose plot and title relate to `a criminal is changed through love`:
 **The quality of matches depends entirely on the embedding model and on the dataset, not on the Neo4j vector index.**
 Embeddings are always generated _outside_ of Neo4j; the database only _stores_ them as properties.
 
-Consider the nodes retrieved with the search prompt `a criminal is changed through love` using SentenceTransformers:
+Consider the nodes retrieved with the search prompt `a criminal is changed through love` using SentenceTransformers (OpenAI's results are similar):
 
 [source, output]
 ----
@@ -140,22 +140,4 @@ However, it also shows the **limitations of embedding models**, by retrieving mo
 
 Even if these movies hardly relate to the search prompt, _the database is right_: they are the most relevant ones, _according to the embeddings_.
 Why the embeddings don't encode meaning in they way one may expect is a question that is not related to vector indexes, but rather the external AI models.
-
-To further clarify: how come `Despicable Me 2` does not show up in the top five closest movies to `Despicable Me`?
-Embeddings are generated on titles and plots, so let's look at how the plots for the two movies relate.
-
-.`Despicable Me 2` plot
-[caption=""]
-|===
-|When Gru, the world's most super-bad turned super-dad has been recruited by a team
-of officials to stop lethal muscle and a host of Gru's own, He has to fight back
-with new gadgetry, cars, and more minion madness.
-|===
-
-These read like entirely different movies: what was a `criminal mastermind` is now `Gru, the world's most super-bad`; there's no more `trio of orphan girls` in any form; there were no `minions` in the plot of the first movie.
-
-Today everybody associates `Despicable Me` with `minions`, but that is not how it was described and marketed when the movie first came out.
-`Minions` stack really well in the public culture though, so they became the main center of marketing _afterward_.
-The embedding model simply doesn't have all this context -- one that comes from having lived in the world for a decade, day in, day out.
-
-The main point here is that **if your search prompts return poor results**, you should investigate the embedding model and the dataset it is applied to, rather than tweaking the Neo4j side of things.
+**If your search prompts return poor results**, you should investigate the embedding model and the dataset it is applied to, rather than tweaking the Neo4j side of things.
