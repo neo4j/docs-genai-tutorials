@@ -1,6 +1,6 @@
 = Find movies similar to a given one
 
-To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[the Cypher procedure `db.index.vector.queryNodes]`.
+To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[Cypher procedure `db.index.vector.queryNodes]`.
 
 ////
 [source, cypher, test-setup]
@@ -81,7 +81,7 @@ RETURN node.title AS title, node.plot AS plot, score
 
 |===
 
-When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], results from OpenAI and SentenceTransformers didn't differ much.
+When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], the results from OpenAI and SentenceTransformers didn't differ much.
 On the other hand, in the example above they perform very differently: OpenAI is able to relate the three _minion_ movies, whereas `Despicable Me 2` and `Minions` don't show up in the results from SentenceTransformers.
 
 How come `Despicable Me 2` does not show up in the top five closest movies to `Despicable Me`, with SentenceTransformers embeddings?
@@ -106,5 +106,6 @@ Although today everybody associates `Despicable Me` with `minions`, that is not 
 `Minions` stack really well in the public culture, which made them the main center of marketing _afterward_.
 The embedding model simply doesn't have all this context -- one that comes from having lived in the world for a decade, day in, day out.
 
-OpenAI seems to be able to relate the three _minion_ movies even if the plots alone don't look too similar, and it has entirely to do with how its model was trained.
-If anything, it's more surprising that OpenAI relates them correctly than SentenceTransformers failing at seeing a link in them.
+OpenAI seems to be able to relate the three _minion_ movies even if the plots alone don't look too similar.
+Why OpenAI behaves in this way has entirely to do with how its model was trained.
+If anything though, it's more surprising that OpenAI relates them correctly than SentenceTransformers failing at seeing a link in them.

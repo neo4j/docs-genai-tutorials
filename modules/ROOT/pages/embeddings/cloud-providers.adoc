@@ -1,7 +1,7 @@
-= Create embeddings with external AI providers
+= Create embeddings with cloud AI providers
 :page-toclevels: -1
 
-The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow to generate embeddings for one or more pieces of text through external AI vendors.
+The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI vendors.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
 This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.

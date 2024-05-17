@@ -6,7 +6,7 @@
 
 * *Embeddings*
 * xref:embeddings/sentence-transformer.adoc[]
-* xref:embeddings/external-providers.adoc[]
+* xref:embeddings/cloud-providers.adoc[]
 * xref:embeddings/compute-similarity.adoc[]
 
 * *Query*

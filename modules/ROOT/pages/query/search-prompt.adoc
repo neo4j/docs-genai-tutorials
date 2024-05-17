@@ -2,7 +2,7 @@
 
 Once movies nodes have an xref:embeddings/index.adoc[embedding encoding their title and plot], and a xref:setup/create-index.adoc[vector index] on those embeddings is present in the database, you may retrieve movies matching a loose description (a _search prompt_), a bit like you do on a search engine to find relevant web pages based on a few keywords.
 
-The examples in this page show how to retrieve movies that relate to the search prompt `a criminal is changed through love`.
+The examples in this page show how to retrieve movies that relate to the prompt `a criminal is changed through love`.
 You may imagine it akin to going to the movie teather and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
 The main difference is that at the theater the whole conversation takes place in natural language, whereas to search in the database the prompt is first turned into an embedding.
 The vector index can then use the prompt embedding to retrieve the nodes whose embedding is most similar to the search prompt.
@@ -132,12 +132,12 @@ Movies whose plot and title relate to `a criminal is changed through love`:
 ----
 
 This example shows that embeddings worked according to expectations: `Despicable Me` comes up third with a relevance score of 77%.
-However, it also shows the **limitations of embedding models**, by retrieving movies that don't really relate to the prompt:
+At the same time, it shows the **limitations of embedding models**, as it retrieved movies that don't really relate to the prompt:
 
-- `Laura` has no "criminal changed through love", but it has a `police detective` (who often works with _criminals_) who falls in `love` in the context of a `murder` (again related to _criminals_).
+- `Laura` has no "criminal changed through love", but it has a `police detective` (who often works with `criminals`) who falls in `love` in the context of a `murder` (again related to `criminals`).
 - `Laws of Attraction` has no `criminals` at all, but it has: `attraction`, which relates to `love`; `litigation`, which usually happens in courts, which are related to `criminals`; `lawyers`, who are often associated with `criminals`; and `love`, although among _lawyers_.
-- `Love the Hard Way` has it almost the other way around: an innocent student falls in `love` with a _downgraded version_ of a `criminal` (a `petty thief`), and enters a downward spiral.
+- `Love the Hard Way` has it almost the other way around: an innocent student falls in `love` with a lower version of a `criminal` (a `petty thief`), and enters a downward spiral.
 
 Even if these movies hardly relate to the search prompt, _the database is right_: they are the most relevant ones, _according to the embeddings_.
-Why the embeddings don't encode meaning in they way one may expect is a question that is not related to vector indexes, but rather the external AI models.
+Why the embeddings don't encode meaning in they way one may expect is a question that has nothing to do with vector indexes, and everything to do with the external AI models.
 **If your search prompts return poor results**, you should investigate the embedding model and the dataset it is applied to, rather than tweaking the Neo4j side of things.
