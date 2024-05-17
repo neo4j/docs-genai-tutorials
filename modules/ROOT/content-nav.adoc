@@ -2,6 +2,7 @@
 
 * **Setup**
 * xref:setup/import-dataset.adoc[]
+* xref:setup/environment.adoc[]
 
 * *Embeddings*
 * xref:embeddings/sentence-transformer.adoc[]

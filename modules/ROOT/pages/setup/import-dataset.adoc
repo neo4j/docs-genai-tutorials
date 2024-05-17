@@ -10,7 +10,7 @@ The way in which a dump file is imported into Neo4j differs whether you are runn
 To import the recommendations dataset on an Aura instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and upload it into the `Import Database` tab of your instance.
 For more information, see link:https://neo4j.com/docs/aura/auradb/importing/import-database/[Aura -> Import database].
 
-After the import completes, go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/external-providers.adoc[cloud AI providers].
+After the import completes, go on to xref:setup/environment.adoc[set up your environment].
 
 
 == Neo4j DBMS
@@ -62,4 +62,4 @@ bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-50 'MATCH (:M
 +----------+
 ----
 
-You can now go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/external-providers.adoc[cloud AI providers].
+You may now go on to xref:setup/environment.adoc[set up your environment].

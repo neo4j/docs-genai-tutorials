@@ -1,0 +1,21 @@
+= Setup environment
+
+At minimum, you will need the link:https://neo4j.com/docs/python-manual/current/[Neo4j Python language library] to interact with your Neo4j instance.
+More packages will be needed depending on how you decide to generate embeddings.
+
+The following examples show how to create a virtual environment, activate it, and install the `neo4j` package.
+
+.Create and activate a virtual environment called `embeddings`
+[source, shell]
+----
+python -m venv virtualenvs/embeddings
+source virtualenvs/embeddings/bin/activate
+----
+
+.Install the `neo4j` package
+[source, shell]
+----
+pip install neo4j
+----
+
+Once your environment is set up, go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/external-providers.adoc[cloud AI providers].

@@ -1,60 +1,114 @@
 = Create embeddings with external AI providers
 :page-toclevels: -1
 
-The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] allow to generate embeddings for one or more pieces of text through external AI vendors.
+The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow to generate embeddings for one or more pieces of text through external AI vendors.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
-This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset], and shows how to generate embeddings for `Movie` nodes basing on their title and plot.
+This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.
+
+[NOTE]
 Embeddings are always generated _outside_ of Neo4j, but _stored_ in the Neo4j database.
 
 
-== Generate embeddings
+== Create embeddings for movies
 
-The query below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
+The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
 
-[source, cypher]
-----
-MATCH (m:Movie WHERE m.plot IS NOT NULL)  // <1>
+////
+MATCH (m:Movie WHERE m.plot IS NOT NULL)
 WITH collect(m) AS movies,
      count(*) AS total,
-     100 AS batchSize  // <2>
+     100 AS batchSize
 UNWIND range(0, total, batchSize) AS batchStart
-CALL {  // <3>
+CALL {
     WITH movies, batchStart, batchSize
-    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch  // <4>
-    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $token }) YIELD index, vector  // <5>
-    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)  // <6>
+    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
+    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $token }) YIELD index, vector
+    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
 } IN TRANSACTIONS OF 1 ROW
+////
+
+[source, python]
+----
+import neo4j
+
+
+URI = '<URI for Neo4j database>'
+AUTH = ('<Username>', '<Password>')
+DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+
+openAI_token = '<OpenAI API token>'
+
+
+def main():
+    driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)  # <1>
+    driver.verify_connectivity()
+
+    batch_size = 100
+    batch_n = 1
+    movies_batch = []
+    with driver.session(database=DB_NAME) as session:
+        # Fetch `Movie` nodes
+        result = session.run('MATCH (m:Movie) RETURN m.plot AS plot, m.title AS title')
+        for record in result:
+            title = record.get('title')
+            plot = record.get('plot')
+
+            if title is not None and plot is not None:
+                movies_batch.append({
+                    'title': title,
+                    'plot': plot,
+                    'to_encode': f'Title: {title}\nPlot: {plot}'  # <2>
+                })
+
+            # Import a batch; flush buffer
+            if len(movies_batch) == batch_size:  # <3>
+                import_batch(driver, movies_batch, batch_n)
+                movies_batch = []
+                batch_n += 1
+
+    # Import complete, show counters
+    records, _, _ = driver.execute_query('''
+    MATCH (m:Movie WHERE m.embedding IS NOT NULL)
+    RETURN count(*) AS countMoviesWithEmbeddings, size(m.embedding) AS embeddingSize
+    ''', database_=DB_NAME)
+    print(f"""
+Embeddings generated and attached to nodes.
+Movie nodes with embeddings: {records[0].get('countMoviesWithEmbeddings')}.
+Embedding size: {records[0].get('embeddingSize')}.
+    """)
+
+
+def import_batch(driver, nodes, batch_n):
+    # Generate and store embeddings for Movie nodes
+    driver.execute_query('''
+    CALL genai.vector.encodeBatch($to_encode_list, 'OpenAI', { token: $token }) YIELD index, vector  // <4>
+    MATCH (m:Movie {title: $movies[index].title, plot: $movies[index].plot})  // <5>
+    CALL db.create.setNodeVectorProperty(m, 'embedding', vector)  // <6>
+    ''', movies=nodes, to_encode_list=[movie['to_encode'] for movie in nodes], token=openAI_token,
+    database_=DB_NAME)
+    print(f'Processed batch {batch_n}')
+
+
+if __name__ == '__main__':
+    main()
+
+'''
+Movie nodes with embeddings: 9083.
+Embedding size: 1536.
+'''
 ----
 
-<1> Fetch all `Movie` nodes, filtering out those with empty plot.
-<2> `batchSize` controls how many embeddings to generate and store at once. The larger the batch size, the more memory the server needs to carry through the operation.
-<3> The link:https://neo4j.com/docs/cypher-manual/current/subqueries/subqueries-in-transactions[`CALL {...} IN TRANSACTIONS` subquery] runs one transaction per batch.
-<4> `batch` contains a list of movies' title and plots, in the form `title: plot`.
-<5> The procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
+<1> The `driver` object is the interface to interact with your Neo4j instance.
+For more information, see link:https://neo4j.com/docs/python-manual/current/[Build applications with Neo4j and Python].
+<2> These are the strings that will be sent to OpenAI to be encoded into embeddings.
+<3> A number of embeddings are collected before a whole batch is submitted to the database.
+This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
+<4> The procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
+The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536.
 See link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#ai-providers[GenAI providers] for a list of supported providers and options.
-The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536. +
-Note that `$token` must be set ahead of running the query (for example with `:param token => 'sk-proj-XXXX'` in link:https://neo4j.com/docs/browser-manual/current/operations/query-parameters/[Neo4j Browser], or as a query parameter in link:https://neo4j.com/docs/api/python-driver/current/api.html#neo4j.Session.run[Neo4j language libraries]).
-<6> The Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node.
+<5> The returned `index` from `genai.vector.encodeBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it.
+<6> The procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
+Adding embeddings with the procedure is more efficient than with the `SET` Cypher clause.
 
-[TIP]
-If you run the query through Neo4j Browser, you must prepend it with `:auto`. +
-If you run it through language libraries, you must run it as an link:https://neo4j.com/docs/python-manual/current/query-advanced/#implicit-transactions[implicit transaction].
-
-You can then verify embeddings have been correctly attached to nodes, before using them to xref:embeddings/compute-similarity.adoc[compare movies' similarity].
-
-.Retrieve count of movies with embeddings, and embedding size
-[source, cypher]
-----
-MATCH (m:Movie WHERE m.embedding IS NOT NULL)
-RETURN count(*) AS countMoviesWithEmbeddings, size(m.embedding) AS embeddingSize
-----
-
-[role="queryresult"]
-|===
-|countMoviesWithEmbeddings |embeddingSize
-
-|9083
-|1536
-
-|===
+Once embeddings are in the database, you can use them to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].

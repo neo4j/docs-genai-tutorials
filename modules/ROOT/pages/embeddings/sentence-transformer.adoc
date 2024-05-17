@@ -2,33 +2,39 @@
 
 The Python library link:https://www.sbert.net/[SentenceTransformers] provides pre-trained models to generate embeddings for text and images, and allows you to play with embeddings without needing an account on OpenAI or other proprietary services.
 
-This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset], and shows how to generate embeddings for `Movie` nodes basing on their title and plot.
-Embeddings are always generated _outside_ of Neo4j, but _stored_ in the Neo4j database.
+This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.
 
+[NOTE]
+Embeddings are always generated _outside_ of Neo4j, but _stored_ in the Neo4j database.
 
 
 == Setup environment
 
-`SentenceTransformers` installs a number of dependencies, so it's best to create a virtual environment first.
+As last setup step, install the `sentence-transformers` package.
 
 [source, shell]
 ----
-python -m venv virtualenvs/embeddings
-source virtualenvs/embeddings/bin/activate
-----
-
-To generate embeddings and interact with your Neo4j instance, install `sentence-transformers` and `neo4j` through `pip`.
-
-[source, shell]
-----
-pip install sentence-transformers neo4j
+pip install sentence-transformers
 ----
 
 
 == Create embeddings for movies
 
-The code below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
-It uses the Python language library to interact with your Neo4j instance -- for more information, see link:https://neo4j.com/docs/python-manual/current/[Build applications with Neo4j and Python].
+The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
+
+////
+MATCH (m:Movie WHERE m.plot IS NOT NULL)
+WITH collect(m) AS movies,
+     count(*) AS total,
+     100 AS batchSize
+UNWIND range(0, total, batchSize) AS batchStart
+CALL {
+    WITH movies, batchStart, batchSize
+    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
+    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $token }) YIELD index, vector
+    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
+} IN TRANSACTIONS OF 1 ROW
+////
 
 [source, python]
 ----
@@ -114,4 +120,4 @@ This avoids holding the whole dataset into memory and potential timeouts (especi
 <5> The import query sets a new `embedding` property on each node `m`, with the embedding vector `movie.embedding` as value.
 It uses the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`], which stores vector properties more efficiently than if they were added with the `SET` Cypher clause.
 
-You can then use embeddings to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].
+Once embeddings are in the database, you can use them to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].
