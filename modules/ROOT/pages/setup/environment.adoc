@@ -1,7 +1,7 @@
 = Setup environment
 
-At minimum, you will need the link:https://neo4j.com/docs/python-manual/current/[Neo4j Python language library] to interact with your Neo4j instance.
-More packages will be needed depending on how you decide to generate embeddings.
+At a minimum, you will need the link:https://neo4j.com/docs/python-manual/current/[Neo4j Python language library] to interact with your Neo4j instance.
+More packages might be needed depending on how you decide to generate embeddings.
 
 The following examples show how to create a virtual environment, activate it, and install the `neo4j` package.
 

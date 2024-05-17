@@ -2,6 +2,23 @@
 
 To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[the Cypher procedure `db.index.vector.queryNodes]`.
 
+////
+[source, cypher, test-setup]
+----
+MATCH (m:Movie WHERE m.plot IS NOT NULL)
+WITH collect(m) AS movies,
+     count(*) AS total,
+     100 AS batchSize
+UNWIND range(0, total, batchSize) AS batchStart
+CALL {
+    WITH movies, batchStart, batchSize
+    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
+    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $openaiToken }) YIELD index, vector
+    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
+} IN TRANSACTIONS OF 1 ROW
+----
+////
+
 [source, cypher, test-result-skip]
 ----
 MATCH (m:Movie {title: 'Despicable Me'})

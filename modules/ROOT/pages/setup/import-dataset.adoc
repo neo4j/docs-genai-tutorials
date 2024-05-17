@@ -2,7 +2,7 @@
 
 
 This tutorial is based on the link:https://github.com/neo4j-graph-examples/recommendations/tree/main[recommendations dataset], so the first step is to import its _dump file_ into your Neo4j instance.
-The way in which a dump file is imported into Neo4j differs whether you are running a self-managed DBMS instance or a cloud Aura instance.
+You can import the dump file both into a self-managed DBMS instance and into a cloud Aura instance.
 
 
 == Neo4j Aura
@@ -30,7 +30,7 @@ UPGRADE.txt   import	    metrics   run
 
 [TIP]
 ====
-If working with a Neo4j Docker container, ensure you connect to it under the user `neo4j` before issuing import commands, or you will get permission issues after the import.
+If working with a Neo4j Docker container, ensure you connect to it with the user `neo4j` before issuing import commands, or you will get permission issues after the import.
 
 [source, shell]
 ----
@@ -38,7 +38,7 @@ docker container exec -u neo4j -it <containerName> /bin/bash
 ----
 ====
 
-To import the dataset, use the link:https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/[`neo4j-admin database load`] command and create a new database with the same name as the dump file.
+To import the dataset, use the link:https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/[`neo4j-admin database load`] command and create a new database with the *same name* as the dump file.
 
 [source, shell]
 ----
@@ -62,4 +62,4 @@ bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-50 'MATCH (:M
 +----------+
 ----
 
-You may now go on to xref:setup/environment.adoc[set up your environment].
+Now continue to xref:setup/environment.adoc[set up your environment].

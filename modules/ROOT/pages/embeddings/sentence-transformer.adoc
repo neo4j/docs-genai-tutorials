@@ -1,4 +1,4 @@
-= Create embeddings with offline libraries
+= Create embeddings with open source libraries
 
 The Python library link:https://www.sbert.net/[SentenceTransformers] provides pre-trained models to generate embeddings for text and images, and allows you to play with embeddings without needing an account on OpenAI or other proprietary services.
 
@@ -10,7 +10,7 @@ Embeddings are always generated _outside_ of Neo4j, but _stored_ in the Neo4j da
 
 == Setup environment
 
-As last setup step, install the `sentence-transformers` package.
+As a last setup step, install the `sentence-transformers` package.
 
 [source, shell]
 ----
@@ -21,20 +21,6 @@ pip install sentence-transformers
 == Create embeddings for movies
 
 The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
-
-////
-MATCH (m:Movie WHERE m.plot IS NOT NULL)
-WITH collect(m) AS movies,
-     count(*) AS total,
-     100 AS batchSize
-UNWIND range(0, total, batchSize) AS batchStart
-CALL {
-    WITH movies, batchStart, batchSize
-    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
-    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $token }) YIELD index, vector
-    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
-} IN TRANSACTIONS OF 1 ROW
-////
 
 [source, python]
 ----
@@ -113,7 +99,7 @@ Embedding size: 384.
 
 <1> The `driver` object is the interface to interact with your Neo4j instance.
 For more information, see link:https://neo4j.com/docs/python-manual/current/[Build applications with Neo4j and Python].
-<2> The model link:https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2[`all-MiniLM-L6-V2`] maps text into vectors of size 384.
+<2> The model link:https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2[`all-MiniLM-L6-V2`] maps text into vectors of size 384 (i.e. lists of 384 numbers).
 <3> The `.encode()` method generates an embedding for the given string (title and plot together, in this case).
 <4> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).

@@ -7,7 +7,7 @@ For example, what movies are about `an exploration of italian mafias in america`
 What movies relate to `a criminal is changed through love`?
 What movies are similar to one another?
 
-**Neo4j's vector indexes allow to retrieve nodes and relationships that are similar to other nodes and relationships, or that relate to a given text prompt.**
+**Neo4j's vector indexes allows you to retrieve nodes and relationships that are similar to other nodes and relationships, or that relate to a given text prompt.**
 Vector indexes don't work on texts expressed in natural language though: they need the texts to be turned into lists of numbers.
 These lists are called _embeddings_, and they attempt to encode the meaning of a text numerically.
 With a vector index, the database can quickly match graph entities basing on their embeddings.
@@ -18,17 +18,24 @@ For example, the picture below shows the title and plot for the movie `Despicabl
 image::despicable-embedding.png[width=100%]
 
 This tutorial uses the link:https://github.com/neo4j-graph-examples/recommendations/tree/main[recommendations dataset], which contains movies and people who have directed or acted in those movies.
-It guides you through importing the dataset, creating embeddings on the movie nodes, creating a vector index, and querying the database for movies given a loose description or a similar movie.
-You learn how to generate embeddings both with free and open source libraries, and with external AI providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
 image::recommendations-model.svg[width=600]
 
+You will see how to setup the environment, create embeddings on the movie nodes (both with free and open source libraries, and with external AI providers), create a vector index, and query the database for movies given a loose description or a similar movie.
+
+////
+- xref:setup/import-dataset.adoc[Import the dataset] and xref:setup/environment.adoc[set up the work environment]
+- Create embeddings on the movie nodes, both xref:embeddings/sentence-transformer.adoc[with free and open source libraries] and xref:embeddings/external-providers.adoc[with external AI providers] (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
+- xref:setup/create-index.adoc[Create a vector index]
+- Query the database for movies xref:query/search-prompt.adoc[given a loose description] or xref:query/similar-nodes.adoc[given a similar movie].
+////
+
 This guide has the following requirements:
 
-- A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or signup for a (free) link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
-- Some familiarity with <<Cypher>> -- If you need a hand, check out link:https://neo4j.com/docs/getting-started/cypher-intro/[Getting started -> Cypher].
+- A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or sign up for an link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
+- Some familiarity with <<Cypher>> -- If you are new to it, check out link:https://neo4j.com/docs/getting-started/cypher-intro/[Getting started -> Cypher].
 - `python` and some familiarity with it.
-- An API key to one of the external AI providers, if you intend to generate embeddings with them.
+- (Optional) An API key to one of the external AI providers, if you intend to generate embeddings with them.
 
 [TIP]
 **You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate embeddings all throughout this tutorial.

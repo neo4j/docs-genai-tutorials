@@ -105,7 +105,7 @@ For more information, see link:https://neo4j.com/docs/python-manual/current/[Bui
 <3> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
 <4> The procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
-The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536.
+The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536 (i.e. lists of 1536 numbers).
 See link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#ai-providers[GenAI providers] for a list of supported providers and options.
 <5> The returned `index` from `genai.vector.encodeBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it.
 <6> The procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
