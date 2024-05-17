@@ -1,6 +1,6 @@
 name: ai
 title: Neo4j AI
-version: ~
+version: '1.0'
 # display_version: '1.0-preview'
 start_page: ROOT:index.adoc
 nav:
