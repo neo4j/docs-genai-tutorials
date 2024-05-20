@@ -1,5 +1,6 @@
 = Create embeddings with cloud AI providers
 :page-toclevels: -1
+:page-role: enterprise-edition
 
 The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
@@ -8,6 +9,17 @@ This page assumes you have already xref:setup/import-dataset.adoc[imported the r
 
 [NOTE]
 Embeddings are always generated _outside_ of Neo4j, but _stored_ in the Neo4j database.
+
+
+== Setup environment
+
+The encoding functions are part of the Neo4j GenAI plugin.
+
+- **On Aura instances** the plugin is enabled by default, so you don't need to take any further actions if you are using Neo4j on Aura.
+- **For self-managed instances**, the plugin is only available on Enterprise Edition and you need to install it.
+You do so by moving the `neo4j-genai.jar` file from `/products` to `/plugins` in your Neo4j home directory, or by starting the Docker container with the extra parameter `--env NEO4J_PLUGINS='["genai"]'`. +
+For more information, see link:https://neo4j.com/docs/operations-manual/current/configuration/plugins/[Configuration -> Plugins].
+
 
 
 == Create embeddings for movies
