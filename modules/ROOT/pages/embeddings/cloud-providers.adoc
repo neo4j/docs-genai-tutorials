@@ -1,7 +1,7 @@
 = Create embeddings with cloud AI providers
 :page-toclevels: -1
 
-The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI vendors.
+The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
 This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.
@@ -101,7 +101,7 @@ Embedding size: 1536.
 
 <1> The `driver` object is the interface to interact with your Neo4j instance.
 For more information, see link:https://neo4j.com/docs/python-manual/current/[Build applications with Neo4j and Python].
-<2> These are the strings that will be sent to OpenAI to be encoded into embeddings.
+<2> The strings that OpenAI should encode into embeddings.
 <3> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
 <4> The procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.

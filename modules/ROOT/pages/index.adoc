@@ -2,7 +2,7 @@
 
 Humans do great with natural language and struggle with numbers; computers do great with numbers and struggle with natural language.
 How can we use computers for tasks that require understanding of natural language, then?
-Given a Neo4j database with movies, how can you query it to know what movies best match your interest, if that is expressed in words?
+Given a Neo4j database with movies, how can we query it to know what movies best match your interest, if that is expressed in words?
 For example, what movies are about `an exploration of italian mafias in america`?
 What movies relate to `a criminal is changed through love`?
 What movies are similar to one another?

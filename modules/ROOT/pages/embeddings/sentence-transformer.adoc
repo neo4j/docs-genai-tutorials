@@ -20,7 +20,7 @@ pip install sentence-transformers
 
 == Create embeddings for movies
 
-The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
+The example below fetches all `Movie` nodes from the database, generates an embedding for title and plot, and adds that as an extra `embedding` property to each node.
 
 [source, python]
 ----

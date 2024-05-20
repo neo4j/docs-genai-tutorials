@@ -1,18 +1,19 @@
 = Find movies given a search prompt
 
-Once movies nodes have an xref:embeddings/index.adoc[embedding encoding their title and plot], and a xref:setup/create-index.adoc[vector index] on those embeddings is present in the database, you may retrieve movies matching a loose description (a _search prompt_), a bit like you do on a search engine to find relevant web pages based on a few keywords.
+Once movies nodes have an embedding encoding their title and plot, and a xref:setup/create-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
 
 The examples in this page show how to retrieve movies that relate to the prompt `a criminal is changed through love`.
 You may imagine it akin to going to the movie teather and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
-The main difference is that at the theater the whole conversation takes place in natural language, whereas to search in the database the prompt is first turned into an embedding.
+The main difference is that at the theater the conversation takes place in natural language, whereas to search in the database the prompt is first turned into an embedding.
 The vector index can then use the prompt embedding to retrieve the nodes whose embedding is most similar to the search prompt.
 
 [TIP]
 **Always use the same model to generate embeddings**: pick one and use it to generate embeddings for both the dataset and search prompts.
-Attempt to mix models with different vector sizes will result in an error; even models with the same vector size are unlikely to interact well with one another though, as they most likely differ in the way they were trained.
+Attempt to mix models with different vector sizes will result in an error.
+Models with the same vector size will work, but are unlikely to interact well with one another, as they most likely differ in the way they were trained.
 
 
-== Similarity for embeddings generated with offline libraries
+== Similarity for embeddings generated with open source libraries
 
 This example uses `SentenceTransformers` to retrieve nodes relating to the description `a criminal is changed through love`.
 
@@ -48,8 +49,8 @@ for record in related_movies:
 <1> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
 xref:embeddings/sentence-transformer.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
-It is then encoded into an embedding.
-<3> To link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[query the vector index], use the Cypher procedure `db.index.vector.queryNodes()`.
+It is then encoded into an embedding, so that it can be used to query for similar nodes.
+<3> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[`db.index.vector.queryNodes`].
 The database returns the `5` most similar nodes to `query_embedding` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]
@@ -98,8 +99,8 @@ for record in records:
 
 <1> Your OpenAI API token, such as `sk-proj-XXXX`.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
-<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()]`.
-<4> To link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[query the vector index], use the Cypher procedure `db.index.vector.queryNodes()`.
+<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()]`, so that it can be used to query for similar nodes.
+<4> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[`db.index.vector.queryNodes`].
 The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]

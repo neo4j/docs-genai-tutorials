@@ -85,7 +85,6 @@ When xref:query/search-prompt.adoc[retrieving nodes matching a search prompt], t
 On the other hand, in the example above they perform very differently: OpenAI is able to relate the three _minion_ movies, whereas `Despicable Me 2` and `Minions` don't show up in the results from SentenceTransformers.
 
 How come `Despicable Me 2` does not show up in the top five closest movies to `Despicable Me`, with SentenceTransformers embeddings?
-
 Given that embeddings are generated on titles and plots, let's look at how the plots for the two movies relate.
 
 .`Despicable Me` plot

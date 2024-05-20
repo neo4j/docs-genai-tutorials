@@ -15,7 +15,7 @@ After the import completes, go on to xref:setup/environment.adoc[set up your env
 
 == Neo4j DBMS
 
-To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and place it in the directory where Neo4j is running from (you may use `docker cp` to copy it to a Neo4j Docker container).
+To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and place it in the directory where Neo4j is running from (use `docker cp` to copy it to a Neo4j Docker container).
 
 .List of Neo4j directory files with `recommendations-50.dump`
 [source, shell]
