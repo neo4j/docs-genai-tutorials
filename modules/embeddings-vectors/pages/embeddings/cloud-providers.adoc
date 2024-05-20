@@ -20,7 +20,6 @@ You do so by moving the `neo4j-genai.jar` file from `/products` to `/plugins` in
 For more information, see link:https://neo4j.com/docs/operations-manual/current/configuration/plugins/[Configuration -> Plugins].
 
 
-
 == Create embeddings for movies
 
 The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.

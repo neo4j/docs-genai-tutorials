@@ -1,7 +1,7 @@
 {
-  "name": "embeddings-vectors",
+  "name": "genai-tutorials",
   "version": "1.0.0",
-  "description": "Embeddings & Vectors Tutorial",
+  "description": "Neo4j GenAI Tutorial",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

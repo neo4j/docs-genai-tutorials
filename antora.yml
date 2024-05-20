@@ -1,7 +1,7 @@
-name: embeddings-vectors
+name: tutorials
 title: Embeddings & Vectors Tutorial
 version: ~
 # display_version: '1.0-preview'
-start_page: ROOT:index.adoc
+start_page: embeddings-vectors:index.adoc
 nav:
-- modules/ROOT/content-nav.adoc
+- modules/embeddings-vectors/content-nav.adoc
