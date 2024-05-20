@@ -41,10 +41,9 @@ RETURN vector.similarity.cosine(a.embedding, b.embedding)
 [TIP]
 The similarity value of two nodes is not very relevant for practical purposes.
 You are normally interested in retrieving the most relevant node(s) given some criteria, so what matters most is that the desired node scores highest _relative to_ the others.
-For example, it doesn't matter what similarity score `Despicable Me` and `Despicable Me 2` have; what matters is that it is the highest among the dataset.
+For example, it doesn't matter what similarity score `Despicable Me` and `Despicable Me 2` have; what matters is that it is the highest among all the movies nodes.
 
-This method works fine for comparing two movies, but it doesn't work to find the most similar nodes to `Despicable Me`, for example: you would need to retrieve the whole dataset and manually compute the similarity of each node's embedding to Despicable Me's embedding with vector similarity functions.
-
-To be able to quickly retrieve nodes basing on their embeddings, go on to xref:setup/create-index.adoc[create a vector index] on the movie embeddings and xref:query/search-prompt.adoc[query the database] based on that.
+This method works fine for comparing two movies, but it doesn't work to find the most similar nodes to `Despicable Me`.
+To be able to quickly retrieve nodes basing on their embeddings, go on to xref:setup/vector-index.adoc[create a vector index] on the movie embeddings and xref:query/search-prompt.adoc[query the database] based on that.
 
 

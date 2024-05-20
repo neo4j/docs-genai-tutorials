@@ -1,0 +1,52 @@
+= Create vector index
+
+// this and later examples can eventually become a tabbed example with the python library
+
+Vector indexes allow Neo4j to run similarity queries across the whole database.
+The example below shows how to create a vector index for movie embeddings, under the name of `moviePlots`.
+
+[.tabbed-example]
+====
+[.include-with-SentenceTransformers]
+=====
+[source, cypher]
+----
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie)
+ON m.embedding
+OPTIONS {indexConfig: {
+    `vector.dimensions`: 384,  // <1>
+    `vector.similarity_function`: 'cosine'  // <2>
+}}
+----
+
+<1> For embeddings generated with the SentenceTransformers model `all-MiniLM-L6-v2`.
+A different model will require a different dimension.
+<2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-similarity[Vector indexes -> Supported similarity functions].
+
+=====
+
+[.include-with-OpenAI]
+=====
+[source, cypher]
+----
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie)
+ON m.embedding
+OPTIONS {indexConfig: {
+    `vector.dimensions`: 1536,  // <1>
+    `vector.similarity_function`: 'cosine'  // <2>
+}}
+----
+
+<1> For embeddings generated with the OpenAI model `text-embedding-ada-002`.
+A different model will require a different dimension.
+<2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-similarity[Vector indexes -> Supported similarity functions].
+
+=====
+
+callouts?
+
+====
+
+For more information on vector indexes, see link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/[Cypher -> Indexes -> Vector indexes].

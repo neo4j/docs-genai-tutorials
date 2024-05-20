@@ -5,14 +5,14 @@
 * xref:setup/environment.adoc[]
 
 * *Embeddings*
-* xref:embeddings/sentence-transformer.adoc[]
+* xref:embeddings/sentence-transformers.adoc[]
 * xref:embeddings/cloud-providers.adoc[]
 * xref:embeddings/compute-similarity.adoc[]
 
 * *Query*
-* xref:setup/create-index.adoc[]
+* xref:setup/vector-index.adoc[]
 * xref:query/search-prompt.adoc[]
-* xref:query/similar-nodes.adoc[]
+* xref:query/similar-movies.adoc[]
 
 * *Further resources*
 * link:https://graphacademy.neo4j.com/categories/llms/[GraphAcademy -- GenAI courses^]

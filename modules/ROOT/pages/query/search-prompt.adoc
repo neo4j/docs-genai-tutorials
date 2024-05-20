@@ -1,6 +1,6 @@
 = Find movies given a search prompt
 
-Once movies nodes have an embedding encoding their title and plot, and a xref:setup/create-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
+Once movies nodes have an embedding encoding their title and plot, and a xref:setup/vector-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
 
 The examples in this page show how to retrieve movies that relate to the prompt `a criminal is changed through love`.
 You may imagine it akin to going to the movie teather and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
@@ -9,7 +9,7 @@ The vector index can then use the prompt embedding to retrieve the nodes whose e
 
 [TIP]
 **Always use the same model to generate embeddings**: pick one and use it to generate embeddings for both the dataset and search prompts.
-Attempt to mix models with different vector sizes will result in an error.
+Attempting to mix models with different vector sizes will result in an error.
 Models with the same vector size will work, but are unlikely to interact well with one another, as they most likely differ in the way they were trained.
 
 
@@ -47,7 +47,7 @@ for record in related_movies:
 ----
 
 <1> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
-xref:embeddings/sentence-transformer.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
+xref:embeddings/sentence-transformers.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
 It is then encoded into an embedding, so that it can be used to query for similar nodes.
 <3> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[`db.index.vector.queryNodes`].

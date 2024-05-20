@@ -18,4 +18,4 @@ source virtualenvs/embeddings/bin/activate
 pip install neo4j
 ----
 
-Once your environment is set up, go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformer.adoc[open source libraries] or with xref:embeddings/cloud-providers.adoc[cloud AI providers].
+Once your environment is set up, go on to enrich each `Movie` node with an embedding of its title and plot, either with xref:embeddings/sentence-transformers.adoc[open source libraries] or with xref:embeddings/cloud-providers.adoc[cloud AI providers].
