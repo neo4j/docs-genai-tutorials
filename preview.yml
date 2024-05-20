@@ -1,7 +1,7 @@
 site:
-  title: Neo4j AI
+  title: Neo4j GenAI Tutorials
   url: https://neo4j.com/docs
-  start_page: embeddings-vectors:ROOT:index.adoc
+  start_page: tutorials:embeddings-vectors:index.adoc
 
 content:
   sources:
@@ -57,4 +57,4 @@ asciidoc:
     cross-mark: icon:times[]
     neo4j-base-uri: https://neo4j.com
     neo4j-docs-base-uri: https://neo4j.com/docs
-    partials: ROOT:partial$@
+    partials: embeddings-vectors:partial$@
