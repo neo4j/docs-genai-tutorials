@@ -1,7 +1,7 @@
 site:
   title: Neo4j GenAI Tutorials
   url: https://neo4j.com/docs
-  start_page: tutorials:embeddings-vectors:index.adoc
+  #start_page: tutorials:embeddings-vectors:index.adoc
 
 content:
   sources:
