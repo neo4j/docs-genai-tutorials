@@ -2,7 +2,7 @@
 site:
   title: Neo4j AI
   url: https://neo4j.com/docs
-  start_page: ai:ROOT:index.adoc
+  start_page: embeddings-vectors:ROOT:index.adoc
 
 content:
   sources:
@@ -25,7 +25,7 @@ urls:
 antora:
   extensions:
   - require: "@neo4j-antora/antora-modify-sitemaps"
-    sitemap_version: '1.0'
+    sitemap_version: '~'
     sitemap_loc_version: 'current'
     move_sitemaps_to_components: true
 

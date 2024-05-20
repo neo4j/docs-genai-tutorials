@@ -1,6 +1,6 @@
-name: ai
-title: Neo4j AI
-version: '1.0'
+name: embeddings-vectors
+title: Embeddings & Vectors Tutorial
+version: ~
 # display_version: '1.0-preview'
 start_page: ROOT:index.adoc
 nav:
