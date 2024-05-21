@@ -1,7 +1,7 @@
 # Use this playbook file when you need to build and publish multuple versions of your content together
 site:
   title: Neo4j GenAI Tutorials
-  url: https://neo4j.com/docs/genai/
+  url: https://neo4j.com/docs/
   start_page: tutorials:embeddings-vectors:index.adoc
 
 content:
@@ -49,6 +49,7 @@ asciidoc:
     page-origin-private: true
     page-hide-toc: false
     page-mixpanel: 4bfb2414ab973c741b6f067bf06d5575
+    page-cdn: https://neo4j.com/docs/assets
     includePDF: false
     nonhtmloutput: ""
     experimental: ''
