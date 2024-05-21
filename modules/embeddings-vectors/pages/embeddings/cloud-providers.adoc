@@ -120,5 +120,6 @@ See link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#ai-pro
 <5> The returned `index` from `genai.vector.encodeBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it.
 <6> The procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
 Adding embeddings with the procedure is more efficient than with the `SET` Cypher clause.
+To set vector properties on relationships, use `db.create.setRelationshipVectorProperty`.
 
 Once embeddings are in the database, you can use them to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].
