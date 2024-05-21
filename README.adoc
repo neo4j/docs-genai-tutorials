@@ -1,6 +1,6 @@
-= docs-ai
+= docs-genai-tutorials
 
-This repo contains the files for the AI section of docs.
+This repo contains the files for the GenAI Tutorials section of docs.
 
 == Prereqs
 
