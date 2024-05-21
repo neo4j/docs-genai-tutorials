@@ -13,6 +13,3 @@
 * xref:setup/vector-index.adoc[]
 * xref:query/search-prompt.adoc[]
 * xref:query/similar-movies.adoc[]
-
-* *Further resources*
-* link:https://graphacademy.neo4j.com/categories/llms/[GraphAcademy -- GenAI courses^]
