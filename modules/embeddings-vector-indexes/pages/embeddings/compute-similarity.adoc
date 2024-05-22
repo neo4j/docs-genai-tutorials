@@ -45,5 +45,3 @@ For example, it doesn't matter what similarity score `Despicable Me` and `Despic
 
 This method works fine for comparing two movies, but it doesn't work to find the most similar nodes to `Despicable Me`.
 To be able to quickly retrieve nodes basing on their embeddings, go on to xref:setup/vector-index.adoc[create a vector index] on the movie embeddings and xref:query/search-prompt.adoc[query the database] based on that.
-
-

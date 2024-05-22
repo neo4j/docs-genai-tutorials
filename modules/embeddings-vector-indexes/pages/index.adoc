@@ -23,13 +23,6 @@ image::recommendations-model.svg[width=600]
 
 You will see how to setup the environment, create embeddings on the movie nodes (both with free and open source libraries, and with external AI providers), create a vector index, and query the database for movies given a loose description or a similar movie.
 
-////
-- xref:setup/import-dataset.adoc[Import the dataset] and xref:setup/environment.adoc[set up the work environment]
-- Create embeddings on the movie nodes, both xref:embeddings/sentence-transformer.adoc[with free and open source libraries] and xref:embeddings/external-providers.adoc[with external AI providers] (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
-- xref:setup/create-index.adoc[Create a vector index]
-- Query the database for movies xref:query/search-prompt.adoc[given a loose description] or xref:query/similar-nodes.adoc[given a similar movie].
-////
-
 This guide has the following requirements:
 
 - A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or sign up for an link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
