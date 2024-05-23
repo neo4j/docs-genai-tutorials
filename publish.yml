@@ -8,6 +8,7 @@ content:
   sources:
   - url: ./
     branches: ['HEAD']
+    edit_url: https://github.com/neo4j/docs-genai-tutorials/tree/dev/{path}
     exclude:
     - '!**/_includes/*'
     - '!**/readme.adoc'
