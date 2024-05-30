@@ -19,7 +19,7 @@ OPTIONS {indexConfig: {
 ----
 
 <1> For embeddings generated with the SentenceTransformers model `all-MiniLM-L6-v2`.
-A different model will require a different dimension.
+A different model may require a different dimension.
 <2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-similarity[Vector indexes -> Supported similarity functions].
 
 =====
@@ -38,7 +38,7 @@ OPTIONS {indexConfig: {
 ----
 
 <1> For embeddings generated with the OpenAI model `text-embedding-ada-002`.
-A different model will require a different dimension.
+A different model may require a different dimension.
 <2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-similarity[Vector indexes -> Supported similarity functions].
 
 =====
