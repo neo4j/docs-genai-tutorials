@@ -1,4 +1,4 @@
-= Setup environment
+= Environment setup
 
 At a minimum, you need the link:https://neo4j.com/docs/python-manual/current/[Neo4j Python language library] to interact with your Neo4j instance.
 More packages might be needed depending on how you decide to generate embeddings.

@@ -7,7 +7,7 @@ For example, what movies are about `an exploration of italian mafias in america`
 What movies relate to `a criminal is changed through love`?
 What movies are similar to one another?
 
-**Neo4j's vector indexes allows you to retrieve nodes and relationships that are similar to other nodes and relationships, or that relate to a given text prompt.**
+**Neo4j's vector indexes allow you to retrieve nodes and relationships that are similar to other nodes and relationships, or that relate to a given text prompt.**
 Vector indexes don't work on texts expressed in natural language though: they need the texts to be turned into lists of numbers.
 These lists are called _embeddings_, and they attempt to encode the meaning of a text numerically.
 With a vector index, the database can quickly match graph entities basing on their embeddings.

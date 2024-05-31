@@ -1,3 +1,5 @@
 [glossary]
+[[Aura]]Aura:: link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura] is Neo4j's fully managed cloud service.
+It comes with both free and paid plans.
 [[Cypher]]Cypher:: link:https://neo4j.com/docs/getting-started/cypher-intro/[Cypher] is Neo4j's graph query language that lets you retrieve data from the database.
 It is like SQL, but for graphs.

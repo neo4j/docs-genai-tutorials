@@ -1,7 +1,7 @@
 = Import dataset
 
 This tutorial is based on the link:https://github.com/neo4j-graph-examples/recommendations/tree/main[recommendations dataset], so the first step is to import its _dump file_ into your Neo4j instance.
-You can import the dump file both into a self-managed DBMS instance and into a cloud Aura instance.
+You can import the dump file both into a self-managed DBMS instance and into an <<Aura>> instance.
 
 
 == Neo4j Aura
@@ -62,3 +62,11 @@ bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-50 'MATCH (:M
 ----
 
 Now continue to xref:setup/environment.adoc[set up your environment].
+
+
+ifndef::backend-pdf[]
+[discrete.glossary]
+== Glossary
+
+include::{partials}/glossary.adoc[]
+endif::[]
