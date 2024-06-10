@@ -33,7 +33,7 @@ driver.verify_connectivity()
 model = SentenceTransformer('all-MiniLM-L6-v2')  # <1>
 
 query_prompt = 'a criminal is changed through love'  # <2>
-query_embedding = model.encode(search_prompt)
+query_embedding = model.encode(query_prompt)
 
 related_movies, _, _ = driver.execute_query('''  // <3>
     CALL db.index.vector.queryNodes('moviePlots', 5, $queryEmbedding)
