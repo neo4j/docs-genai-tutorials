@@ -1,4 +1,5 @@
 = Compute embeddings similarity
+include::{ga-courses-uri}/llm-vectors-unstructured/ad.adoc[]
 
 Once embeddings are in the database, you can compute the similarity of two of them using the Cypher function link:https://neo4j.com/docs/cypher-manual/current/functions/vector/#functions-similarity-cosine[`vector.similarity.cosine()`].
 
