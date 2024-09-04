@@ -29,7 +29,6 @@ This guide has the following requirements:
 - Some familiarity with <<Cypher>> -- If you are new to it, check out link:https://neo4j.com/docs/getting-started/cypher-intro/[Getting started -> Cypher].
 - `python` and some familiarity with it.
 - (Optional) An API key to one of the external AI providers, if you intend to generate embeddings with them.
-External providers are only available in Neo4j Enteprise Edition or on Aura.
 
 [TIP]
 **You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate all embeddings throughout this tutorial.
