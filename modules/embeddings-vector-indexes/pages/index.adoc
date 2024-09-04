@@ -32,7 +32,7 @@ This guide has the following requirements:
 External providers are only available in Neo4j Enteprise Edition or on Aura.
 
 [TIP]
-**You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate embeddings all throughout this tutorial.
+**You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate all embeddings throughout this tutorial.
 
 
 ifndef::backend-pdf[]
