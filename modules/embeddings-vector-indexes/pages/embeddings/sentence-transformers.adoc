@@ -1,4 +1,5 @@
 = Create embeddings with open source libraries
+include::{ga-courses-uri}/llm-vectors-unstructured/ad.adoc[]
 
 The Python library link:https://www.sbert.net/[SentenceTransformers] provides pre-trained models to generate embeddings for text and images, and allows you to play with embeddings without needing an account on OpenAI or other proprietary services.
 
