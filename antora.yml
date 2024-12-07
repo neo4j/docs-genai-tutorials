@@ -5,3 +5,14 @@ version: ~
 #start_page: embeddings-vectors:index.adoc
 nav:
 - modules/embeddings-vector-indexes/content-nav.adoc
+asciidoc:
+  attributes:
+    ga-courses-uri: https://raw.githubusercontent.com/neo4j-graphacademy/courses/main/asciidoc/courses
+    ga-promos-uri: https://raw.githubusercontent.com/neo4j-graphacademy/courses/main/asciidoc/promos
+    page-ad-icon: mortarboard
+    page-ad-icon: mortarboard
+    page-ad-title: Neo4j & LLM Fundamentals
+    page-ad-description: Learn with Neo4j fits into your Generative AI stack
+    page-ad-link: https://graphacademy.neo4j.com/courses/llm-fundamentals/?ref=docs-ad-llm-fundamentals
+    page-ad-underline-role: button
+    page-ad-underline: Enroll now
