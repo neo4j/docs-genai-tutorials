@@ -64,7 +64,6 @@ Movies whose plot and title relate to `a criminal is changed through love`:
 ----
 
 
-[role=label--enterprise-edition]
 == Similarity for embeddings generated with OpenAI and other cloud services
 
 This example uses OpenAI to retrieve nodes relating to the description `a criminal is changed through love`.
