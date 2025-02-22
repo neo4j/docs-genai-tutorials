@@ -76,6 +76,9 @@ def main():
                 movies_batch = []
                 batch_n += 1
 
+        # Flush last batch
+        import_batch(driver, movies_with_embeddings, batch_n)
+
     # Import complete, show counters
     records, _, _ = driver.execute_query('''
     MATCH (m:Movie WHERE m.embedding IS NOT NULL)
