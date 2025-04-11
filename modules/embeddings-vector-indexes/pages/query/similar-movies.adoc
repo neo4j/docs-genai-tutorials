@@ -1,6 +1,6 @@
 = Find movies similar to another movie
 
-To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-query[Cypher procedure `db.index.vector.queryNodes]`.
+To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#query-vector-index[Cypher procedure `db.index.vector.queryNodes]`.
 
 ////
 [source, cypher, test-setup]

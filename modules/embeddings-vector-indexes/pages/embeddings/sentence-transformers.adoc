@@ -107,7 +107,7 @@ For more information, see link:https://neo4j.com/docs/python-manual/current/[Bui
 <4> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
 <5> The import query sets a new `embedding` property on each node `m`, with the embedding vector `movie.embedding` as value.
-It uses the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#indexes-vector-set[`db.create.setNodeVectorProperty`], which stores vector properties more efficiently than if they were added with the `SET` Cypher clause.
+It uses the Cypher procedure link:https://neo4j.com/docs/operations-manual/current/procedures/#procedure_db_create_setnodevectorproperty[`db.create.setNodeVectorProperty`], which stores vector properties more efficiently than if they were added with the `SET` Cypher clause.
 To set vector properties on relationships, use `db.create.setRelationshipVectorProperty`.
 
 Once embeddings are in the database, you can use them to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].

@@ -26,7 +26,7 @@ You will see how to setup the environment, create embeddings on the movie nodes 
 This guide has the following requirements:
 
 - A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or sign up for an link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
-- Some familiarity with <<Cypher>> -- If you are new to it, check out link:https://neo4j.com/docs/getting-started/cypher-intro/[Getting started -> Cypher].
+- Some familiarity with <<Cypher>> -- If you are new to it, check out link:https://neo4j.com/docs/getting-started/cypher/[Getting started -> Cypher].
 - `python` and some familiarity with it.
 - (Optional) An API key to one of the external AI providers, if you intend to generate embeddings with them.
 
