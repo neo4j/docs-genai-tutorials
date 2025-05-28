@@ -94,10 +94,10 @@ Embedding size: {records[0].get('embeddingSize')}.
 def import_batch(driver, nodes, batch_n):
     # Generate and store embeddings for Movie nodes
     driver.execute_query('''
-    CALL genai.vector.encodeBatch($to_encode_list, 'OpenAI', { token: $token }) YIELD index, vector  // <4>
+    CALL genai.vector.encodeBatch($listToEncode, 'OpenAI', { token: $token }) YIELD index, vector  // <4>
     MATCH (m:Movie {title: $movies[index].title, plot: $movies[index].plot})  // <5>
     CALL db.create.setNodeVectorProperty(m, 'embedding', vector)  // <6>
-    ''', movies=nodes, to_encode_list=[movie['to_encode'] for movie in nodes], token=openAI_token,
+    ''', movies=nodes, listToEncode=[movie['to_encode'] for movie in nodes], token=openAI_token,
     database_=DB_NAME)
     print(f'Processed batch {batch_n}')
 
