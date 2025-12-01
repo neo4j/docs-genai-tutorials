@@ -24,11 +24,11 @@ To import the recommendations dataset on a self-managed instance, download the f
 [source, shell]
 ----
 neo4j@2f446f86ce6a:~$ ls
-LICENSE.txt   bin	    labs      packaging_info
+LICENSE.txt   bin           labs      packaging_info
 LICENSES.txt  certificates  lib       plugins
-NOTICE.txt    conf	    licenses  products
-README.txt    data	    logs      recommendations-50.dump
-UPGRADE.txt   import	    metrics   run
+NOTICE.txt    conf          licenses  products
+README.txt    data          logs      recommendations-50.dump
+UPGRADE.txt   import        metrics   run
 ----
 
 [TIP]
