@@ -14,6 +14,10 @@ After the import completes, go on to xref:setup/environment.adoc[set up your env
 
 == Neo4j DBMS
 
+[NOTE]
+Importing a dump file on self-managed Community Edition instances is a non-trivial operation.
+The workflow described below works on Enterprise Edition only -- if you don't have a Enterprise license, the easiest option is to use Neo4j Aura.
+
 To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and place it in the directory where Neo4j is running from (use `docker cp` to copy it to a Neo4j Docker container).
 
 .List of Neo4j directory files with `recommendations-50.dump`
