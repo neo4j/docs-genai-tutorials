@@ -99,7 +99,7 @@ for record in records:
 
 <1> Your OpenAI API token, such as `sk-proj-XXXX`.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
-<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()]`, so that it can be used to query for similar nodes.
+<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode()`], so that it can be used to query for similar nodes.
 <4> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
 The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
