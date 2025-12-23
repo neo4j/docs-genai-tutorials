@@ -12,7 +12,7 @@ WITH collect(m) AS movies,
 UNWIND range(0, total, batchSize) AS batchStart
 CALL {
     WITH movies, batchStart, batchSize
-    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
+    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title + ': ' + movie.plot] AS batch
     CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $openaiToken }) YIELD index, vector
     CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
 } IN TRANSACTIONS OF 1 ROW

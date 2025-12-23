@@ -23,20 +23,6 @@ For more information, see link:https://neo4j.com/docs/operations-manual/current/
 
 The example below fetches all `Movie` nodes from the database, generates an embedding of the concatenation of movie title and plot, and adds that as an extra `embedding` property to each node.
 
-////
-MATCH (m:Movie WHERE m.plot IS NOT NULL)
-WITH collect(m) AS movies,
-     count(*) AS total,
-     100 AS batchSize
-UNWIND range(0, total, batchSize) AS batchStart
-CALL {
-    WITH movies, batchStart, batchSize
-    WITH movies, batchStart, [movie IN movies[batchStart .. batchStart + batchSize] | movie.title || ': ' || movie.plot] AS batch
-    CALL genai.vector.encodeBatch(batch, 'OpenAI', { token: $token }) YIELD index, vector
-    CALL db.create.setNodeVectorProperty(movies[batchStart + index], 'embedding', vector)
-} IN TRANSACTIONS OF 1 ROW
-////
-
 [source, python]
 ----
 import neo4j
