@@ -63,7 +63,7 @@ def main():
                 batch_n += 1
 
         # Flush last batch
-        import_batch(driver, movies_with_embeddings, batch_n)
+        import_batch(driver, movies_batch, batch_n)
 
     # Import complete, show counters
     records, _, _ = driver.execute_query('''
