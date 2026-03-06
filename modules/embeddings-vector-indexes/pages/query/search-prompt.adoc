@@ -1,9 +1,9 @@
 = Find movies given a search prompt
 
-Once movies nodes have an embedding encoding their title and plot, and a xref:setup/vector-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
+Once movie nodes have an embedding encoding their title and plot, and a xref:setup/vector-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
 
 The examples in this page show how to retrieve movies that relate to the prompt `a criminal is changed through love`.
-You may imagine it akin to going to the movie teather and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
+You may imagine it akin to going to the movie theater and asking: "What movies would you recommend to me? Today I feel inspired by movies in which a criminal is changed through love."
 The main difference is that at the theater the conversation takes place in natural language, whereas to search in the database the prompt is first turned into an embedding.
 The vector index can then use the prompt embedding to retrieve the nodes whose embedding is most similar to the search prompt.
 
