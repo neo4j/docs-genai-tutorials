@@ -38,45 +38,45 @@ openAI_token = '<OpenAI API token>'
 
 
 def main():
-    driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)  # <1>
-    driver.verify_connectivity()
+    with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:  # <1>
+        driver.verify_connectivity()
 
-    batch_size = 100
-    batch_n = 1
-    movies_batch = []
-    with driver.session(database=DB_NAME) as session:
-        # Fetch `Movie` nodes
-        result = session.run('MATCH (m:Movie) RETURN m.plot AS plot, m.title AS title')
-        for record in result:
-            title = record.get('title')
-            plot = record.get('plot')
+        batch_size = 100
+        batch_n = 1
+        movies_batch = []
+        with driver.session(database=DB_NAME) as session:
+            # Fetch `Movie` nodes
+            result = session.run('MATCH (m:Movie) RETURN m.plot AS plot, m.title AS title')
+            for record in result:
+                title = record.get('title')
+                plot = record.get('plot')
 
-            if title is not None and plot is not None:
-                movies_batch.append({
-                    'title': title,
-                    'plot': plot,
-                    'to_encode': f'Title: {title}\nPlot: {plot}'  # <2>
-                })
+                if title is not None and plot is not None:
+                    movies_batch.append({
+                        'title': title,
+                        'plot': plot,
+                        'to_encode': f'Title: {title}\nPlot: {plot}'  # <2>
+                    })
 
-            # Import a batch; flush buffer
-            if len(movies_batch) == batch_size:  # <3>
-                import_batch(driver, movies_batch, batch_n)
-                movies_batch = []
-                batch_n += 1
+                # Import a batch; flush buffer
+                if len(movies_batch) == batch_size:  # <3>
+                    import_batch(driver, movies_batch, batch_n)
+                    movies_batch = []
+                    batch_n += 1
 
-        # Flush last batch
-        import_batch(driver, movies_batch, batch_n)
+            # Flush last batch
+            import_batch(driver, movies_batch, batch_n)
 
-    # Import complete, show counters
-    records, _, _ = driver.execute_query('''
-    MATCH (m:Movie WHERE m.embedding IS NOT NULL)
-    RETURN count(*) AS countMoviesWithEmbeddings, size(m.embedding) AS embeddingSize
-    ''', database_=DB_NAME)
-    print(f"""
-Embeddings generated and attached to nodes.
-Movie nodes with embeddings: {records[0].get('countMoviesWithEmbeddings')}.
-Embedding size: {records[0].get('embeddingSize')}.
-    """)
+        # Import complete, show counters
+        records, _, _ = driver.execute_query('''
+        MATCH (m:Movie WHERE m.embedding IS NOT NULL)
+        RETURN count(*) AS countMoviesWithEmbeddings, size(m.embedding) AS embeddingSize
+        ''', database_=DB_NAME)
+        print(f"""
+    Embeddings generated and attached to nodes.
+    Movie nodes with embeddings: {records[0].get('countMoviesWithEmbeddings')}.
+    Embedding size: {records[0].get('embeddingSize')}.
+        """)
 
 
 def import_batch(driver, nodes, batch_n):

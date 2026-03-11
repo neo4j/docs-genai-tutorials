@@ -32,23 +32,22 @@ URI = '<database-uri>'
 AUTH = ('<username>', '<password>')
 DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
-driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
-driver.verify_connectivity()
-
 model = SentenceTransformer('all-MiniLM-L6-v2')  # <1>
 
 query_prompt = 'a criminal is changed through love'  # <2>
 query_embedding = model.encode(query_prompt)
 
-related_movies, _, _ = driver.execute_query('''  // <3>
-    CALL db.index.vector.queryNodes('moviePlots', 5, $queryEmbedding)
-    YIELD node, score
-    RETURN node.title AS title, node.plot AS plot, score
-    ''', queryEmbedding=query_embedding,
-    database_=DB_NAME)
-print(f'Movies whose plot and title relate to `{query_prompt}`:')
-for record in related_movies:
-    print(record)
+with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+    related_movies, _, _ = driver.execute_query('''  // <3>
+        CALL db.index.vector.queryNodes('moviePlots', 5, $queryEmbedding)
+        YIELD node, score
+        RETURN node.title AS title, node.plot AS plot, score
+        ''', queryEmbedding=query_embedding,
+        database_=DB_NAME)
+    print(f'Movies whose plot and title relate to `{query_prompt}`:')
+    for record in related_movies:
+        print(record)
 ----
 
 <1> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
