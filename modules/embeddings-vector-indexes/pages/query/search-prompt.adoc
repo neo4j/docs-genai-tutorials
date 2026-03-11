@@ -74,20 +74,30 @@ Movies whose plot and title relate to `a criminal is changed through love`:
 This example uses OpenAI to retrieve nodes relating to the description `a criminal is changed through love`.
 
 ////
-[source, cypher, test-setup]
+[source, python, test-setup]
 ----
-DROP INDEX moviePlots;
-CREATE VECTOR INDEX moviePlots
-FOR (m:Movie)
-ON m.embedding
-OPTIONS {indexConfig: {
-    `vector.dimensions`: 1536,
-    `vector.similarity_function`: 'cosine'
-}}
+import neo4j
+
+
+URI = '<database-uri>'
+AUTH = ('<username>', '<password>')
+DB_NAME = '<database-name>'
+
+with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+    records, summary, _ = driver.execute_query('''
+        CREATE VECTOR INDEX moviePlots
+        FOR (m:Movie)
+        ON m.embedding
+        OPTIONS {indexConfig: {
+            `vector.dimensions`: 1536,
+            `vector.similarity_function`: 'cosine'
+        }}
+    ''')
 ----
 ////
 
-[source, python, role=nocollapse]
+[source, python]
 ----
 import neo4j
 
@@ -95,8 +105,6 @@ import neo4j
 URI = '<database-uri>'
 AUTH = ('<username>', '<password>')
 DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
-driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
-driver.verify_connectivity()
 
 openAI_token = '<OpenAI API token>'  # <1>
 
@@ -108,12 +116,15 @@ CALL db.index.vector.queryNodes('moviePlots', 5, queryVector)  // <4>
 YIELD node, score
 RETURN node.title as title, node.plot, score
 '''
-records, summary, _ = driver.execute_query(
-    search_query, searchPrompt=search_prompt, token=openAI_token,
-    database_=DB_NAME)
-print(f'Movies whose plot and title relate to `{search_prompt}`:')
-for record in records:
-    print(record)
+
+with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+    records, summary, _ = driver.execute_query(
+        search_query, searchPrompt=search_prompt, token=openAI_token,
+        database_=DB_NAME)
+    print(f'Movies whose plot and title relate to `{search_prompt}`:')
+    for record in records:
+        print(record)
 ----
 
 <1> Your OpenAI API token, such as `sk-proj-XXXX`.
