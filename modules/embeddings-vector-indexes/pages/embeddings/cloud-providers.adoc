@@ -1,6 +1,6 @@
 = Create embeddings with cloud AI providers
 
-The Cypher function link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
+The Cypher function link:https://neo4j.com/docs/genai/plugin/5/embeddings/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/genai/plugin/5/embeddings/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
 This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.
@@ -102,11 +102,11 @@ For more information, see link:https://neo4j.com/docs/python-manual/current/[Bui
 <2> The strings that OpenAI should encode into embeddings.
 <3> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
-<4> The procedure link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
+<4> The procedure link:https://neo4j.com/docs/genai/plugin/5/embeddings/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
 The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536 (i.e. lists of 1536 numbers).
-See link:https://neo4j.com/docs/cypher-manual/current/genai-integrations/#ai-providers[GenAI providers] for a list of supported providers and options.
+See link:https://neo4j.com/docs/genai/plugin/5/reference/ai-providers/[GenAI providers] for a list of supported providers and options.
 <5> The returned `index` from `genai.vector.encodeBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it.
-<6> The procedure link:https://neo4j.com/docs/operations-manual/current/procedures/#procedure_db_create_setnodevectorproperty[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
+<6> The procedure link:https://neo4j.com/docs/operations-manual/current/procedures/#procedure_db_create_setNodeVectorProperty[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
 Adding embeddings with the procedure is more efficient than with the `SET` Cypher clause.
 To set vector properties on relationships, use `db.create.setRelationshipVectorProperty`.
 
