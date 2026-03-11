@@ -38,3 +38,4 @@ target/
 # node modules
 node_modules/
 .env
+package-lock.json
