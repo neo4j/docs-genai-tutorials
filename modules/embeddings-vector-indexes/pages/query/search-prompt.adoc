@@ -1,3 +1,5 @@
+:test-setup-dump: https://github.com/neo4j-graph-examples/recommendations/raw/refs/heads/main/data/recommendations-embeddings-aligned-5.26.dump
+
 = Find movies given a search prompt
 
 Once movie nodes have an embedding encoding their title and plot, and a xref:setup/vector-index.adoc[vector index] on those embeddings is present in the database, you can retrieve movies matching a loose description (a _search prompt_), a bit like you would query a search engine to find relevant web pages based on a few keywords.
@@ -17,15 +19,18 @@ Models with the same vector size will work, but are unlikely to interact well wi
 
 This example uses `SentenceTransformers` to retrieve nodes relating to the description `a criminal is changed through love`.
 
-[source, python, role=nocollapse]
+////
+Must skip this example as the setup dataset is on openai embeddings, (1536 dimensions).
+////
+[source, python, role=nocollapse, test-skip]
 ----
 from sentence_transformers import SentenceTransformer
 import neo4j
 
 
-URI = '<URI for Neo4j database>'
-AUTH = ('<Username>', '<Password>')
-DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+URI = '<database-uri>'
+AUTH = ('<username>', '<password>')
+DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
 driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
 driver.verify_connectivity()
@@ -68,14 +73,28 @@ Movies whose plot and title relate to `a criminal is changed through love`:
 
 This example uses OpenAI to retrieve nodes relating to the description `a criminal is changed through love`.
 
+////
+[source, cypher, test-setup]
+----
+DROP INDEX moviePlots;
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie)
+ON m.embedding
+OPTIONS {indexConfig: {
+    `vector.dimensions`: 1536,
+    `vector.similarity_function`: 'cosine'
+}}
+----
+////
+
 [source, python, role=nocollapse]
 ----
 import neo4j
 
 
-URI = '<URI for Neo4j database>'
-AUTH = ('<Username>', '<Password>')
-DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+URI = '<database-uri>'
+AUTH = ('<username>', '<password>')
+DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 driver = neo4j.GraphDatabase.driver(URI, auth=AUTH)
 driver.verify_connectivity()
 

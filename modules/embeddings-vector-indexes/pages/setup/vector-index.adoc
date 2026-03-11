@@ -26,6 +26,14 @@ A different model may require a different dimension.
 
 [.include-with-OpenAI]
 =====
+
+////
+[source, cypher, test-setup]
+----
+DROP INDEX moviePlots
+----
+////
+
 [source, cypher]
 ----
 CREATE VECTOR INDEX moviePlots

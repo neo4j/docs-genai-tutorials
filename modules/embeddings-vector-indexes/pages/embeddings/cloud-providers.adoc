@@ -1,3 +1,5 @@
+:test-setup-dump: https://github.com/neo4j-graph-examples/recommendations/raw/refs/heads/main/data/recommendations-5.26.dump
+
 = Create embeddings with cloud AI providers
 
 The Cypher function link:https://neo4j.com/docs/genai/plugin/5/embeddings/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/genai/plugin/5/embeddings/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
@@ -28,9 +30,9 @@ The example below fetches all `Movie` nodes from the database, generates an embe
 import neo4j
 
 
-URI = '<URI for Neo4j database>'
-AUTH = ('<Username>', '<Password>')
-DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+URI = '<database-uri>'
+AUTH = ('<username>', '<password>')
+DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
 openAI_token = '<OpenAI API token>'
 

@@ -6,7 +6,7 @@ You can import the dump file both into a self-managed DBMS instance and into an 
 
 == Neo4j Aura
 
-To import the recommendations dataset on an Aura instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and upload it into the `Import Database` tab of your instance.
+To import the recommendations dataset on an Aura instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-5.26.dump[recommendations-5.26.dump] and upload it into the `Import Database` tab of your instance.
 For more information, see link:https://neo4j.com/docs/aura/auradb/importing/import-database/[Aura -> Import database].
 
 After the import completes, go on to xref:setup/environment.adoc[set up your environment].
@@ -18,16 +18,16 @@ After the import completes, go on to xref:setup/environment.adoc[set up your env
 Importing a dump file on self-managed Community Edition instances is a non-trivial operation.
 The workflow described below works on Enterprise Edition only -- if you don't have a Enterprise license, the easiest option is to use Neo4j Aura.
 
-To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-50.dump[recommendations-50.dump] and place it in the directory where Neo4j is running from (use `docker cp` to copy it to a Neo4j Docker container).
+To import the recommendations dataset on a self-managed instance, download the file link:https://github.com/neo4j-graph-examples/recommendations/raw/main/data/recommendations-5.26.dump[recommendations-5.26.dump] and place it in the directory where Neo4j is running from (use `docker cp` to copy it to a Neo4j Docker container).
 
-.List of Neo4j directory files with `recommendations-50.dump`
+.List of Neo4j directory files with `recommendations-5.26.dump`
 [source, shell]
 ----
 neo4j@2f446f86ce6a:~$ ls
 LICENSE.txt   bin           labs      packaging_info
 LICENSES.txt  certificates  lib       plugins
 NOTICE.txt    conf          licenses  products
-README.txt    data          logs      recommendations-50.dump
+README.txt    data          logs      recommendations-5.26.dump
 UPGRADE.txt   import        metrics   run
 ----
 
@@ -45,15 +45,15 @@ To import the dataset, use the link:https://neo4j.com/docs/operations-manual/cur
 
 [source, shell]
 ----
-bin/neo4j-admin database load recommendations-50 --from-path=./
-bin/cypher-shell -u neo4j -p <databasePassword> -d system 'CREATE DATABASE `recommendations-50` WAIT'
+bin/neo4j-admin database load recommendations-5.26 --from-path=./
+bin/cypher-shell -u neo4j -p <databasePassword> -d system 'CREATE DATABASE `recommendations-5.26` WAIT'
 ----
 
 To verify that the import was successful, check that the count for `Movie` nodes is 9125.
 
 [source, shell]
 ----
-bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-50 'MATCH (:Movie) RETURN count(*)'
+bin/cypher-shell -u neo4j -p <databasePassword> -d recommendations-5.26 'MATCH (:Movie) RETURN count(*)'
 ----
 
 [source, shell, role=nocopy]

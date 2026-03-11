@@ -1,3 +1,5 @@
+:test-setup-dump: https://github.com/neo4j-graph-examples/recommendations/raw/refs/heads/main/data/recommendations-5.26.dump
+
 = Create embeddings with open source libraries
 
 The Python library link:https://www.sbert.net/[SentenceTransformers] provides pre-trained models to generate embeddings for text and images, and allows you to play with embeddings without needing an account on OpenAI or other proprietary services.
@@ -28,9 +30,9 @@ from sentence_transformers import SentenceTransformer
 import neo4j
 
 
-URI = '<URI for Neo4j database>'
-AUTH = ('<Username>', '<Password>')
-DB_NAME = '<Database name>'  # examples: 'recommendations-50', 'neo4j'
+URI = '<database-uri>'
+AUTH = ('<username>', '<password>')
+DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
 
 def main():
