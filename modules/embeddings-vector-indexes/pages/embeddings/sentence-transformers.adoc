@@ -24,7 +24,11 @@ pip install sentence-transformers
 
 The example below fetches all `Movie` nodes from the database, generates an embedding for title and plot, and adds that as an extra `embedding` property to each node.
 
-[source, python]
+////
+Installing sentence_transformers yields a docker image of >15GB, so we skip these examples.
+////
+
+[source, python, test-skip]
 ----
 from sentence_transformers import SentenceTransformer
 import neo4j
