@@ -21,17 +21,21 @@ This tutorial uses the link:https://github.com/neo4j-graph-examples/recommendati
 
 image::recommendations-model.svg[width=600]
 
-You will see how to set up the environment, create embeddings on the movie nodes (both with free and open source libraries, and with external AI providers), create a vector index, and query the database for movies given a loose description or a similar movie.
+You will learn how to set up the environment, create embeddings on the movie nodes (both with free and open source libraries, and with external AI providers), create a vector index, and query the database for movies given a loose description or a similar movie.
+
+
+== Requirements
 
 This guide has the following requirements:
 
-- A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/current/installation/[install Neo4j locally] or sign up for an link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
+- A running instance of Neo4j >= 5.13 -- If you don't have one, link:https://neo4j.com/docs/operations-manual/5/installation/[install Neo4j locally] or sign up for an link:https://neo4j.com/cloud/platform/aura-graph-database/[Aura cloud instance].
 - Some familiarity with <<Cypher>> -- If you are new to it, check out link:https://neo4j.com/docs/getting-started/cypher/[Getting started -> Cypher].
 - `python` and some familiarity with it.
 - (Optional) An API key to one of the external AI providers, if you intend to generate embeddings with them.
 
-[TIP]
-**You should always use the same model to generate embeddings for a dataset**: pick one and use it to generate all embeddings throughout this tutorial.
+[IMPORTANT]
+Neo4j >= 2025.11 contains an updated version of the link:https://neo4j.com/docs/genai/plugin/current/[GenAI plugin], with new embeddings functions and futher features (running on Cypher 25).
+If your database is on Cypher 25, check out link:http://neo4j.com/docs/tutorials/25/embeddings-vector-indexes/[the corresponding version of this tutorial].
 
 
 ifndef::backend-pdf[]

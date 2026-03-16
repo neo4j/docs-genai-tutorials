@@ -7,7 +7,7 @@ site:
 content:
   sources:
   - url: ./
-    branches: ['HEAD']
+    branches: ['cypher-25', 'HEAD']
     edit_url: https://github.com/neo4j/docs-genai-tutorials/tree/dev/{path}
     exclude:
     - '!**/_includes/*'

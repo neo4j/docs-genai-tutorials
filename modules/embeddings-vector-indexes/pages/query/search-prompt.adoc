@@ -54,7 +54,7 @@ with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
 xref:embeddings/sentence-transformers.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
 It is then encoded into an embedding, so that it can be used to query for similar nodes.
-<3> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
+<3> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
 The database returns the `5` most similar nodes to `query_embedding` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]
@@ -129,7 +129,7 @@ with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
 <1> Your OpenAI API token, such as `sk-proj-XXXX`.
 <2> The _query prompt_ contains a loose description of movies to retrieve.
 <3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/genai/plugin/5/embeddings/#single-embedding[`genai.vector.encode()`], so that it can be used to query for similar nodes.
-<4> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
+<4> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
 The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]

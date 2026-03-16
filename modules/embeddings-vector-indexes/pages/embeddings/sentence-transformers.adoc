@@ -109,6 +109,7 @@ Embedding size: 384.
 <1> The `driver` object is the interface to interact with your Neo4j instance.
 For more information, see link:https://neo4j.com/docs/python-manual/current/[Build applications with Neo4j and Python].
 <2> The model link:https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2[`all-MiniLM-L6-V2`] maps text into vectors of size 384 (i.e. lists of 384 numbers).
+**You should always use the same model to generate embeddings for a dataset**: pick one and stick to it for your whole project.
 <3> The `.encode()` method generates an embedding for the given string (title and plot together, in this case).
 <4> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).

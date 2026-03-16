@@ -41,7 +41,7 @@ docker container exec -u neo4j -it <containerName> /bin/bash
 ----
 ====
 
-To import the dataset, use the link:https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/[`neo4j-admin database load`] command and create a new database with the *same name* as the dump file.
+To import the dataset, use the link:https://neo4j.com/docs/operations-manual/5/backup-restore/restore-dump/[`neo4j-admin database load`] command and create a new database with the *same name* as the dump file.
 
 [source, shell]
 ----
