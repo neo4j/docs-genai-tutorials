@@ -2,7 +2,7 @@
 
 = Find movies similar to another movie
 
-To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#query-vector-index[Cypher procedure `db.index.vector.queryNodes`].
+To find movies whose embedding is similar to that of a specific movie, retrieve the movie and feed its embedding to the link:https://neo4j.com/docs/cypher-manual/current/clauses/search/[Cypher clause `SEARCH`].
 
 ////
 [source, cypher, test-setup]
@@ -19,10 +19,14 @@ OPTIONS {indexConfig: {
 
 [source, cypher, test-result-skip]
 ----
-MATCH (m:Movie {title: 'Despicable Me'})
-CALL db.index.vector.queryNodes('moviePlots', 5, m.embedding)
-YIELD node, score
-RETURN node.title AS title, node.plot AS plot, score
+MATCH (minion:Movie {title: 'Despicable Me'})
+MATCH (movie:Movie)
+  SEARCH movie IN (
+    VECTOR INDEX moviePlots
+    FOR minion.embedding
+    LIMIT 5
+  ) SCORE AS similarityScore
+RETURN movie.title AS title, movie.plot AS plot, similarityScore
 ----
 
 .Result with embeddings from OpenAI

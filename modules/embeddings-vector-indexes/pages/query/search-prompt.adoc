@@ -32,17 +32,21 @@ URI = '<database-uri>'
 AUTH = ('<username>', '<password>')
 DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
-model = SentenceTransformer('all-MiniLM-L6-v2')  # <1>
+model = SentenceTransformer('all-MiniLM-L6-v2')  # <.>
 
-query_prompt = 'a criminal is changed through love'  # <2>
+query_prompt = 'a criminal is changed through love'  # <.>
 query_embedding = model.encode(query_prompt)
 
 with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
-    related_movies, _, _ = driver.execute_query('''  // <3>
-        CALL db.index.vector.queryNodes('moviePlots', 5, $queryEmbedding)
-        YIELD node, score
-        RETURN node.title AS title, node.plot AS plot, score
+    related_movies, _, _ = driver.execute_query('''
+        MATCH (movie:Movie)
+          SEARCH movie IN ( // <.>
+            VECTOR INDEX moviePlots
+            FOR $queryEmbedding
+            LIMIT 5
+          ) SCORE AS similarityScore
+        RETURN movie.title AS title, movie.plot AS plot, similarityScore
         ''', queryEmbedding=query_embedding,
         database_=DB_NAME)
     print(f'Movies whose plot and title relate to `{query_prompt}`:')
@@ -50,12 +54,12 @@ with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
         print(record)
 ----
 
-<1> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
+<.> It is important to generate the embedding for the search prompt with the same model as the one used to generate the embeddings that you search among.
 xref:embeddings/sentence-transformers.adoc[This tutorial] used `all-MiniLM-L6-V2` to generate embeddings and it is re-used here as well.
-<2> The _query prompt_ contains a loose description of movies to retrieve.
+<.> The _query prompt_ contains a loose description of movies to retrieve.
 It is then encoded into an embedding, so that it can be used to query for similar nodes.
-<3> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
-The database returns the `5` most similar nodes to `query_embedding` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
+<.> To query the vector index, use the Cypher clause link:https://neo4j.com/docs/cypher-manual/current/clauses/search/[`SEARCH`].
+The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]
 ----
@@ -105,31 +109,34 @@ URI = '<database-uri>'
 AUTH = ('<username>', '<password>')
 DB_NAME = '<database-name>'  # examples: 'recommendations-5.26', 'neo4j'
 
-openAI_token = '<OpenAI API token>'  # <1>
+openAI_token = '<OpenAI API token>'  # <.>
 
-search_prompt = 'a criminal is changed through love'  # <2>
-
-search_query = '''
-WITH genai.vector.encode($searchPrompt, 'OpenAI', { token: $token }) AS queryVector  // <3>
-CALL db.index.vector.queryNodes('moviePlots', 5, queryVector)  // <4>
-YIELD node, score
-RETURN node.title as title, node.plot, score
-'''
+search_prompt = 'a criminal is changed through love'  # <.>
 
 with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
-    records, summary, _ = driver.execute_query(
-        search_query, searchPrompt=search_prompt, token=openAI_token,
+    records, summary, _ = driver.execute_query('''
+        WITH ai.text.embed($searchPrompt, 'OpenAI', {
+          token: $token, model: 'text-embedding-3-small'
+        }) AS queryVector  // <.>
+        MATCH (movie:Movie)
+          SEARCH movie IN ( // <.>
+            VECTOR INDEX moviePlots
+            FOR queryVector
+            LIMIT 5
+          ) SCORE AS similarityScore
+        RETURN movie.title AS title, movie.plot AS plot, similarityScore
+        ''', searchPrompt=search_prompt, token=openAI_token,
         database_=DB_NAME)
     print(f'Movies whose plot and title relate to `{search_prompt}`:')
     for record in records:
         print(record)
 ----
 
-<1> Your OpenAI API token, such as `sk-proj-XXXX`.
-<2> The _query prompt_ contains a loose description of movies to retrieve.
-<3> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/genai/plugin/5/embeddings/#single-embedding[`genai.vector.encode()`], so that it can be used to query for similar nodes.
-<4> To query the vector index, use the Cypher procedure link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#query-vector-index[`db.index.vector.queryNodes`].
+<.> Your OpenAI API token, such as `sk-proj-XXXX`.
+<.> The _query prompt_ contains a loose description of movies to retrieve.
+<.> The query prompt is encoded into an embedding via the Cypher function link:https://neo4j.com/docs/genai/plugin/current/embeddings/#single-embedding[`ai.text.embed()`], so that it can be used to query for similar nodes.
+<.> To query the vector index, use the Cypher clause link:https://neo4j.com/docs/cypher-manual/current/clauses/search/[`SEARCH`].
 The database returns the `5` most similar nodes to `queryVector` from the vector index `moviePlots`, together with the `score` of how well they match the query embedding.
 
 [source, output]

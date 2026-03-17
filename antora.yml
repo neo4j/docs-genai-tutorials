@@ -1,6 +1,6 @@
 name: tutorials
 title: Embeddings & Vector Indexes Tutorial
-version: 5
+version: 25
 #start_page: embeddings-vectors:index.adoc
 nav:
 - modules/embeddings-vector-indexes/content-nav.adoc

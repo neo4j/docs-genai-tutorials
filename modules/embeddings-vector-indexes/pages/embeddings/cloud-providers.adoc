@@ -2,7 +2,7 @@
 
 = Create embeddings with cloud AI providers
 
-The Cypher function link:https://neo4j.com/docs/genai/plugin/5/embeddings/#single-embedding[`genai.vector.encode`] and procedure link:https://neo4j.com/docs/genai/plugin/5/embeddings/#multiple-embeddings[`genai.vector.encodeBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
+The Cypher function link:https://neo4j.com/docs/genai/plugin/current/embeddings/#single-embedding[`ai.text.embed`] and procedure link:https://neo4j.com/docs/genai/plugin/current/embeddings/#multiple-embeddings[`ai.text.embedBatch`] allow you to generate embeddings for one or more pieces of text through external AI providers.
 You need an API token for one of the supported providers (OpenAI, Vertex AI, Azure OpenAI, Amazon Bedrock).
 
 This page assumes you have already xref:setup/import-dataset.adoc[imported the recommendations dataset] and xref:setup/environment.adoc[set up your environment], and shows how to generate and store embeddings for `Movie` nodes basing on their title and plot.
@@ -82,9 +82,11 @@ def main():
 def import_batch(driver, nodes, batch_n):
     # Generate and store embeddings for Movie nodes
     driver.execute_query('''
-    CALL genai.vector.encodeBatch($listToEncode, 'OpenAI', { token: $token }) YIELD index, vector  // <4>
-    MATCH (m:Movie {title: $movies[index].title, plot: $movies[index].plot})  // <5>
-    CALL db.create.setNodeVectorProperty(m, 'embedding', vector)  // <6>
+    CALL ai.text.encodeBatch($listToEncode, 'OpenAI', { // <4>
+      token: $token, model: 'text-embedding-3-small'
+    }) YIELD index, vector  // <5>
+    MATCH (m:Movie {title: $movies[index].title, plot: $movies[index].plot})
+    CALL db.create.setNodeVectorProperty(m, 'embedding', toFloatList(vector))  // <6>
     ''', movies=nodes, listToEncode=[movie['to_encode'] for movie in nodes], token=openAI_token,
     database_=DB_NAME)
     print(f'Processed batch {batch_n}')
@@ -104,13 +106,14 @@ For more information, see link:https://neo4j.com/docs/python-manual/current/[Bui
 <2> The strings that OpenAI should encode into embeddings.
 <3> A number of embeddings are collected before a whole batch is submitted to the database.
 This avoids holding the whole dataset into memory and potential timeouts (especially relevant for larger datasets).
-<4> The procedure link:https://neo4j.com/docs/genai/plugin/5/embeddings/#multiple-embeddings[`genai.vector.encodeBatch()`] submits the batch for encoding to OpenAI.
-The default model for OpenAI is `text-embedding-ada-002`, which embeds text into vectors of size 1536 (i.e. lists of 1536 numbers).
-See link:https://neo4j.com/docs/genai/plugin/5/reference/ai-providers/[GenAI providers] for a list of supported providers and options.
-**You should always use the same model to generate embeddings for a dataset**: pick one and stick to it for your whole project.
-<5> The returned `index` from `genai.vector.encodeBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it.
+<4> The procedure link:https://neo4j.com/docs/genai/plugin/current/embeddings/#multiple-embeddings[`ai.text.embedBatch()`] submits the batch for encoding to OpenAI.
+OpenAI's model `text-embedding-3-small` embeds text into vectors of size 1536 (i.e. lists of 1536 numbers).
+See link:https://neo4j.com/docs/genai/plugin/current/reference/ai-providers/[GenAI providers] for a list of supported providers and options.
+**Always use the same model to generate embeddings for a dataset**: pick one and stick to it for your whole project.
+<5> The returned `index` from `ai.text.embedBatch` allows to relate embeddings to movies, so that it's possible to retrieve each movie node and attach its embedding to it; `vector` is of type link:https://neo4j.com/docs/cypher-manual/current/values-and-types/vector/[`VECTOR`], the storage of which is available only in Enterprise Edition.
 <6> The procedure link:https://neo4j.com/docs/operations-manual/current/procedures/#procedure_db_create_setNodeVectorProperty[`db.create.setNodeVectorProperty`] stores the embedding `vector` in the property named `embedding` for each movie node `m`.
 Adding embeddings with the procedure is more efficient than with the `SET` Cypher clause.
+As storing properties of `VECTOR` type is available only in Enterprise Edition, the extra call to link:https://neo4j.com/docs/cypher-manual/current/functions/list/#functions-tofloatlist[`toFloatList`] ensures compatibility across all editions.
 To set vector properties on relationships, use `db.create.setRelationshipVectorProperty`.
 
 Once embeddings are in the database, you can use them to xref:embeddings/compute-similarity.adoc[compare how similar one movie is to another].
