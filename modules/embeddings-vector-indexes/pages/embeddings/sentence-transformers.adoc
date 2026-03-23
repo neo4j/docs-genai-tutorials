@@ -121,7 +121,7 @@ To set vector properties on relationships, use `db.create.setRelationshipVectorP
 ====
 With Enterprise Edition, you can avoid calling `db.create.setNodeVectorProperty` and instead pass the embeddings as driver's link:https://neo4j.com/docs/python-manual/current/data-types/#vector[`Vector`] types and set them as properties via the Cypher clause link:https://neo4j.com/docs/cypher-manual/current/clauses/set/[`SET`].
 
-[source, python]
+[source, python, test-skip]
 ----
 from sentence_transformers import SentenceTransformer
 import neo4j

@@ -95,7 +95,12 @@ with neo4j.GraphDatabase.driver(URI, auth=AUTH) as driver:
         OPTIONS {indexConfig: {
             `vector.dimensions`: 1536,
             `vector.similarity_function`: 'cosine'
-        }}
+        }};
+    ''')
+    # Cypher testing takes care of this automatically; driver testing not
+    driver.execute_query('''
+        CALL db.awaitIndexes()
+        CALL db.prepareForReplanning()
     ''')
 ----
 ////
