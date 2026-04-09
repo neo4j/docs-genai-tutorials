@@ -13,6 +13,7 @@ The vector index can then use the prompt embedding to retrieve the nodes whose e
 **Always use the same model to generate embeddings**: pick one and use it to generate embeddings for both the dataset and search prompts.
 Attempting to mix models with different vector sizes will result in an error.
 Models with the same vector size will work, but are unlikely to interact well with one another, as they most likely differ in the way they were trained.
+Create the vector index with an explicit `vector.dimensions` value matching that model, as shown in xref:setup/vector-index.adoc[Create vector index].
 
 
 == Similarity for embeddings generated with open source libraries
