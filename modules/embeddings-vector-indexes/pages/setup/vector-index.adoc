@@ -3,6 +3,9 @@
 Vector indexes allow Neo4j to run similarity queries across the whole database.
 The example below shows how to create a vector index for movie embeddings, under the name of `moviePlots`.
 
+[TIP]
+Provide a dimension when xref:setup/vector-index.adoc[creating a vector index] as shown in the examples below, as it ensures that only vectors of that size are indexed and makes dimension mismatches fail explicitly at query time.
+
 [.tabbed-example]
 ====
 [.include-with-SentenceTransformers]
@@ -19,7 +22,7 @@ OPTIONS {indexConfig: {
 ----
 
 <1> For embeddings generated with the SentenceTransformers model `all-MiniLM-L6-v2`.
-A different model may require a different dimension.
+If you use a different model, update this value to match its embedding dimension.
 <2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#similarity-functions[Vector indexes -> Cosine and Euclidean similarity functions].
 
 =====
@@ -46,7 +49,7 @@ OPTIONS {indexConfig: {
 ----
 
 <1> For embeddings generated with the OpenAI model `text-embedding-ada-002`.
-A different model may require a different dimension.
+If you use a different model, update this value to match its embedding dimension.
 <2> The cosine similarity function is the most common choice. For more details and other options, see link:https://neo4j.com/docs/cypher-manual/5/indexes/semantic-indexes/vector-indexes/#similarity-functions[Vector indexes -> Cosine and Euclidean similarity functions].
 
 =====
