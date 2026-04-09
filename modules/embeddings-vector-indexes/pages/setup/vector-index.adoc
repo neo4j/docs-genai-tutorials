@@ -2,7 +2,9 @@
 
 Vector indexes allow Neo4j to run similarity queries across the whole database.
 The example below shows how to create a vector index for movie embeddings, under the name of `moviePlots`.
-The examples explicitly set `vector.dimensions`, which is recommended because it ensures only embeddings of the expected size are indexed and makes dimension mismatches fail clearly at query time.
+
+[TIP]
+Provide a dimension when xref:setup/vector-index.adoc[creating a vector index] as shown in the examples below, as it ensures that only vectors of that size are indexed and makes dimension mismatches fail explicitly at query time.
 
 [.tabbed-example]
 ====
