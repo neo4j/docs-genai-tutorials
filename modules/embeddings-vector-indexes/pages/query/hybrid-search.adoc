@@ -1,0 +1,135 @@
+:test-setup-dump: https://github.com/neo4j-graph-examples/recommendations/raw/refs/heads/main/data/recommendations-embeddings-aligned-5.26.dump
+
+= Hybrid search
+
+Vector search is useful for semantic matches and paraphrases.
+For example, a search prompt can retrieve movies with similar meaning even if the words in the prompt do not appear in the movie title or plot.
+
+Some searches also need lexical matches: exact names, acronyms, identifiers, product codes, or domain-specific terms.
+For those cases, consider hybrid search that combines vector search with full-text search.
+
+Hybrid search usually uses vector search for semantic similarity and full-text search for lexical relevance, then combines the ranked results.
+This can improve recall when either search method misses useful results on its own.
+
+== Create a full-text index
+
+The previous query examples use the `moviePlots` vector index.
+To add lexical search over the same movie data, create a full-text index over the title and plot:
+
+////
+[source, cypher, test-setup]
+----
+CREATE VECTOR INDEX moviePlots IF NOT EXISTS
+FOR (m:Movie)
+ON m.embedding
+OPTIONS {indexConfig: {
+    `vector.dimensions`: 1536,
+    `vector.similarity_function`: 'cosine'
+}}
+----
+////
+
+[source, cypher]
+----
+CREATE FULLTEXT INDEX movieText IF NOT EXISTS
+FOR (movie:Movie)
+ON EACH [movie.title, movie.plot];
+----
+
+== Combine vector and full-text results
+
+The following query searches for `minion villain` in two ways:
+
+* A full-text search ranks movies that contain matching words in the title or plot.
+* A vector search ranks movies whose title and plot embedding is semantically similar to the embedding for `Despicable Me`.
+
+Each source produces its own ranked list.
+The query converts each source rank into a small contribution, sums the contributions per movie, and returns the movies with the highest combined score.
+
+[source, cypher, test-result-skip]
+----
+CYPHER 25
+MATCH (reference:Movie {title: 'Despicable Me'})
+WITH
+  'minion villain' AS query,
+  reference.embedding AS queryVector,
+  5 AS finalK,
+  60.0 AS rrfConstant
+
+CALL (query, queryVector, rrfConstant) {
+  CALL db.index.fulltext.queryNodes('movieText', query, {limit: 20})
+  YIELD node AS movie, score
+  ORDER BY score DESC, movie.title ASC
+  WITH collect(movie) AS movies, rrfConstant
+  UNWIND CASE WHEN size(movies) = 0 THEN [] ELSE range(0, size(movies) - 1) END AS rankIndex
+  RETURN
+    movies[rankIndex] AS movie,
+    'fulltext' AS source,
+    1.0 / (rrfConstant + rankIndex + 1) AS contribution
+
+  UNION ALL
+
+  MATCH (movie:Movie)
+    SEARCH movie IN (
+      VECTOR INDEX moviePlots
+      FOR queryVector
+      LIMIT 20
+    ) SCORE AS score
+  ORDER BY score DESC, movie.title ASC
+  WITH collect(movie) AS movies, rrfConstant
+  UNWIND CASE WHEN size(movies) = 0 THEN [] ELSE range(0, size(movies) - 1) END AS rankIndex
+  RETURN
+    movies[rankIndex] AS movie,
+    'vector' AS source,
+    1.0 / (rrfConstant + rankIndex + 1) AS contribution
+}
+WITH movie, finalK, sum(contribution) AS hybridScore, collect(source) AS sources
+ORDER BY hybridScore DESC, movie.title ASC
+WITH finalK, collect({
+  title: movie.title,
+  sources: sources,
+  hybridScore: hybridScore
+}) AS rows
+WITH rows[..finalK] AS rows
+UNWIND rows AS row
+RETURN
+  row.title AS title,
+  row.sources AS sources,
+  row.hybridScore AS hybridScore
+ORDER BY hybridScore DESC, title ASC;
+----
+
+.Result with embeddings from OpenAI
+[role="queryresult", cols="2,2,1", options="header"]
+|===
+| title | sources | hybridScore
+
+| "Despicable Me 2"
+| ["fulltext", "vector"]
+| 0.03200204813108039
+
+| "Minions"
+| ["fulltext", "vector"]
+| 0.03125763125763126
+
+| "Despicable Me"
+| ["vector"]
+| 0.01639344262295082
+
+| "Nowhere to Hide (Injeong sajeong bol geot eobtda)"
+| ["fulltext"]
+| 0.01639344262295082
+
+| "Wild Wild West"
+| ["fulltext"]
+| 0.016129032258064516
+
+|===
+
+The example gives full-text and vector search the same weight.
+Movies that rank highly in either source can appear in the final result, while movies that appear in both sources receive contributions from both.
+
+This example uses the existing embedding for `Despicable Me` to keep the query self-contained.
+In an application where users enter free-text search prompts, generate `queryVector` from the prompt with the same model that created the stored movie embeddings.
+
+For weighting, larger candidate sets, and production query tuning, see link:https://neo4j.com/developer/genai-ecosystem/vector-search/#_hybrid_full_text_and_vector_search[Developer Guide -> Hybrid full-text and vector search].
