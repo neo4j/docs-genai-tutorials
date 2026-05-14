@@ -11,6 +11,9 @@ What movies are similar to one another?
 Vector indexes don't work on texts expressed in natural language though: they need the texts to be turned into lists of numbers.
 These lists are called _embeddings_, and they attempt to encode the meaning of a text numerically.
 With a vector index, the database can quickly match graph entities based on their embeddings.
+This is semantic search: it finds results by meaning, rather than by exact words.
+Lexical search, such as full-text search, matches the words and terms used in the data.
+Some applications use both approaches, and sometimes other ranked sources, together as hybrid search.
 
 For example, the picture below shows the title and plot for the movie `Despicable Me` and its corresponding embedding.
 
@@ -22,6 +25,7 @@ This tutorial uses the link:https://github.com/neo4j-graph-examples/recommendati
 image::recommendations-model.svg[width=600]
 
 You will learn how to set up the environment, create embeddings on the movie nodes (both with free and open source libraries, and with external AI providers), create a vector index, and query the database for movies given a loose description or a similar movie.
+You will also learn when to consider hybrid search for applications that need exact lexical matches alongside semantic matches, and how the same pattern can include other ranked sources.
 
 
 == Requirements
