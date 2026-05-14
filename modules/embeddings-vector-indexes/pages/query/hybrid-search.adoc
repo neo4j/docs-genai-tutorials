@@ -11,6 +11,13 @@ For those cases, consider hybrid search that combines vector search with full-te
 Hybrid search usually uses vector search for semantic similarity and full-text search for lexical relevance, then combines the ranked results.
 This can improve recall when either search method misses useful results on its own.
 
+Hybrid search is not limited to these two sources.
+You can combine any ranked search results that are useful for an application.
+For example, a graph application can add a structural search source by indexing node embeddings created with link:https://neo4j.com/docs/graph-data-science/current/machine-learning/node-embeddings/[Neo4j Graph Data Science] and then combining those results with lexical and semantic matches.
+
+This tutorial demonstrates the common vector plus full-text pattern.
+For a worked lexical, semantic, and structural example, see link:https://neo4j.com/developer/genai-ecosystem/hybrid-search/[Hybrid search in the Developer Guide].
+
 == Create a full-text index
 
 The previous query examples use the `moviePlots` vector index.
@@ -132,4 +139,4 @@ Movies that rank highly in either source can appear in the final result, while m
 This example uses the existing embedding for `Despicable Me` to keep the query self-contained.
 In an application where users enter free-text search prompts, generate `queryVector` from the prompt with the same model that created the stored movie embeddings.
 
-For weighting, larger candidate sets, and production query tuning, see link:https://neo4j.com/developer/genai-ecosystem/vector-search/#_hybrid_full_text_and_vector_search[Developer Guide -> Hybrid full-text and vector search].
+For weighting, larger candidate sets, and production query tuning, see link:https://neo4j.com/developer/genai-ecosystem/hybrid-search/[Hybrid search in the Developer Guide].
