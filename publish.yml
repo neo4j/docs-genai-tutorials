@@ -35,6 +35,8 @@ asciidoc:
   - "@neo4j-antora/antora-add-notes"
   - "@neo4j-antora/mark-terms"
   attributes:
+    page-tabs: genai@
+    page-tabs-index: 10
     page-theme: docs
     page-type: Docs
     page-search-type: Docs
