@@ -13,3 +13,4 @@
 * xref:setup/vector-index.adoc[]
 * xref:query/search-prompt.adoc[]
 * xref:query/similar-movies.adoc[]
+* xref:query/hybrid-search.adoc[]
