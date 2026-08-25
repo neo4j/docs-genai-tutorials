@@ -1,7 +1,7 @@
 # Use this playbook file when you need to build and publish multuple versions of your content together
 site:
   title: Neo4j GenAI Tutorials
-  url: https://neo4j.com/docs/
+  url: https://neo4j.com/docs/genai/
   #start_page: tutorials:embeddings-vector-indexes:index.adoc
 
 content:
