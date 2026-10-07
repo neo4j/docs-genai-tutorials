@@ -58,3 +58,14 @@ asciidoc:
     neo4j-docs-base-uri: /docs
     table-caption:
     partials: embeddings-vector-indexes:partial$@
+    # NODES 2026 registration (Remove after November 12)
+    #
+    page-ad-overline-link: ''
+    page-ad-overline: ''
+    page-ad-icon: ''
+    page-ad-image: "{neo4j-docs-base-uri}/assets/img/nodes-26.png"
+    page-ad-title: Neo4j Online Developer Conference
+    page-ad-description: Join us on November 12 for live and unique tech talks over 24 hours across all timezones
+    page-ad-link: https://neo4j.com/nodes/
+    page-ad-underline-role: button
+    page-ad-underline: Register
